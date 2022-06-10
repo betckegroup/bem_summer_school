@@ -1,3 +1,6 @@
 format: jb-book
 root: intro
+- caption: Fast direct solvers
+  chapters:
+  - file: greens_fct_compression
 
