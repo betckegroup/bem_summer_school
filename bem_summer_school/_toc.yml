@@ -3,5 +3,5 @@ root: intro
 parts:
 - caption: Fast direct solvers
   chapters:
-  - file: greens_fct_compression
+  - file: low_rank_compression
 
