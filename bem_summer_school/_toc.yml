@@ -4,4 +4,5 @@ parts:
 - caption: Fast direct solvers
   chapters:
   - file: low_rank_compression.ipynb
+  - file: partitioning.ipynb
 
