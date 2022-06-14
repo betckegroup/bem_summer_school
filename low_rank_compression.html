@@ -363,6 +363,23 @@ title="Print to PDF"
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#low-rank-compression-of-integral-operators">
+   Low-rank compression of integral operators
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-green-s-functions-interactions-to-integral-operators">
+     From Green’s functions interactions to integral operators
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#near-and-far-field">
+     Near- and far-field
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
     </nav>
@@ -449,6 +466,23 @@ title="Print to PDF"
    <li class="toc-h3 nav-item toc-entry">
     <a class="reference internal nav-link" href="#adaptive-cross-approximation-aca">
      Adaptive Cross Approximation (ACA)
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#low-rank-compression-of-integral-operators">
+   Low-rank compression of integral operators
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#from-green-s-functions-interactions-to-integral-operators">
+     From Green’s functions interactions to integral operators
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#near-and-far-field">
+     Near- and far-field
     </a>
    </li>
   </ul>
@@ -687,6 +721,48 @@ S_k = \sum_{\ell=1}^k \frac{1}{R_{\ell-1}[i_\ell, j_\ell]}R_{\ell-1}[:, j_\ell]R
 \]</div>
 <p>such that <span class="math notranslate nohighlight">\(A = S_k + R_k\)</span>.</p>
 <p>We are not discussing adaptive stopping criteria and the right choice of the row indices <span class="math notranslate nohighlight">\(i_k\)</span> here. ACA is highly effective for kernel matrices arising from smooth kernels. However, it can fail if the underlying kernel function is not smooth (e.g. a double-layer kernel on over the boundary of a cube).</p>
+</section>
+</section>
+<section id="low-rank-compression-of-integral-operators">
+<h2>Low-rank compression of integral operators<a class="headerlink" href="#low-rank-compression-of-integral-operators" title="Permalink to this headline">#</a></h2>
+<p>In this section we want to briefly discuss the difficulties when we want to apply low-rank compression techniques to integral operators. We consider the matrix <span class="math notranslate nohighlight">\(A\)</span> obtained from the Galerkin discretisation of the Laplace single-layer boundary operator with piecewise constant basis functions, defined by</p>
+<div class="math notranslate nohighlight">
+\[
+A[i, j] = \int_{\tau_i}\int_{\tau_j}g(x, y)ds(y)ds(x).
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> are elements of the surface triangulation of a boundary <span class="math notranslate nohighlight">\(\Gamma\)</span>, and <span class="math notranslate nohighlight">\(g(x, y) = \frac{1}{4\pi |x-y|}\)</span> is the standard Laplace Green’s function.</p>
+<section id="from-green-s-functions-interactions-to-integral-operators">
+<h3>From Green’s functions interactions to integral operators<a class="headerlink" href="#from-green-s-functions-interactions-to-integral-operators" title="Permalink to this headline">#</a></h3>
+<p>Previously, we have considered the matrix <span class="math notranslate nohighlight">\(G\)</span> of Green’s function interactions <span class="math notranslate nohighlight">\(g(x_i, y_j)\)</span>. In the integral operator context we have integrals over Green’s functions. Assume, we discretise the above integrals with some quadrature rule. We then obtain</p>
+<div class="math notranslate nohighlight">
+\[
+A[i, j] = \sum_{\ell_i=1}^p \sum_{\ell_j=1}^p g(x_{\ell_i}, y_{\ell_j})\omega_{\ell_i}\omega_{\ell_j}
+\]</div>
+<p>with the <span class="math notranslate nohighlight">\(x_{\ell_i}\)</span> and <span class="math notranslate nohighlight">\(y_{\ell_j}\)</span> being quadrature points on the respective triangles, and <span class="math notranslate nohighlight">\(\omega_{\ell_i}\)</span>, <span class="math notranslate nohighlight">\(\omega_{\ell_j}\)</span> the corresponding quadrature weights.</p>
+<p>We typically need at least two types of quadrature rules, one for the case that <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> are not adjacent. The other one for the cases that <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> share a vertex, edge, or are identical.</p>
+<p>Now let <span class="math notranslate nohighlight">\(F\)</span> be a sparse matrix that maps the coefficients of our basis functions to the corresponding contributions at the quadrature points. In the case of piecewise constant basis functions the <span class="math notranslate nohighlight">\(j\)</span> th column of <span class="math notranslate nohighlight">\(p\)</span> has <span class="math notranslate nohighlight">\(p\)</span> nonzero entries associated with the quadrature points at the triangle <span class="math notranslate nohighlight">\(\tau_j\)</span>. Each of these entries contains the corresponding quadrature weight.</p>
+<p>We furthermore introduce a sparse matrix <span class="math notranslate nohighlight">\(C\)</span> that contains the Green’s function interactions only between quadrature points on adjacent or identical triangles. This is a correction matrix that serves to subtract out the contributions from the Green’s function matrix <span class="math notranslate nohighlight">\(G\)</span> for which the non-adjacent quadrature rule does not apply.</p>
+<p>Finally, we have a sparse matrix <span class="math notranslate nohighlight">\(S\)</span> containing all the evaluated singular integrals between adjacent triangles. Hence, <span class="math notranslate nohighlight">\(S[i, j] = A[i, j]\)</span> if <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> are adjacent or identical. All other elements of <span class="math notranslate nohighlight">\(S\)</span> are zero.</p>
+<p>Putting all this together we can write <span class="math notranslate nohighlight">\(A\)</span> in the form</p>
+<div class="math notranslate nohighlight">
+\[
+A = F^T(G - C)F + S.
+\]</div>
+<p>This might look cumbersome but has some advantages. The matrices <span class="math notranslate nohighlight">\(F\)</span>, <span class="math notranslate nohighlight">\(C\)</span> and <span class="math notranslate nohighlight">\(S\)</span> are highly sparse, and only <span class="math notranslate nohighlight">\(G\)</span> is a dense matrix. We therefore have an explicit representation of <span class="math notranslate nohighlight">\(A\)</span> in terms of cheap transformations applied to the dense Green’s function matrix <span class="math notranslate nohighlight">\(G\)</span>.</p>
+<p>There is one little technical caveat we have to be mindful of. The matrix <span class="math notranslate nohighlight">\(G\)</span> now has on its diagonal interactions of quadrature points with themselves. We can simply solve this by introducing the convention that <span class="math notranslate nohighlight">\(g(x_i, x_i) = 0\)</span>.</p>
+<p>With the above representation we do not need to think about the specifics of the boundary integral operator code. We can treat the compression of <span class="math notranslate nohighlight">\(G\)</span> completely independently from any other implementational details with respect to integral operators and can separate out compression from integral operator evaluation in our implementation.</p>
+<p>There are some disadvantages though, with the main ones being</p>
+<ul class="simple">
+<li><p>The matrix <span class="math notranslate nohighlight">\(G\)</span> has a larger dimension than <span class="math notranslate nohighlight">\(A\)</span> since it involves all quadrature points while <span class="math notranslate nohighlight">\(A\)</span> only has the evaluated integrals. This increases memory consumption even for compressed low-rank representations.</p></li>
+<li><p>If we want to use low-rank techniques to compute an approximate inverse of <span class="math notranslate nohighlight">\(A\)</span> we need to work on <span class="math notranslate nohighlight">\(A\)</span> itself and not on the matrix <span class="math notranslate nohighlight">\(G\)</span>.</p></li>
+</ul>
+<p>In what follows we will only consider compression techniques for the matrix <span class="math notranslate nohighlight">\(G\)</span>. As shown above we can easily integrate this into code for integral operator evaluation. Alternatively, with small modifications we can also directly compress the matrix <span class="math notranslate nohighlight">\(A\)</span> in a very similar way as we present for <span class="math notranslate nohighlight">\(G\)</span>.</p>
+</section>
+<section id="near-and-far-field">
+<h3>Near- and far-field<a class="headerlink" href="#near-and-far-field" title="Permalink to this headline">#</a></h3>
+<p>Given a set of sources <span class="math notranslate nohighlight">\(Y\)</span> and a set of targets <span class="math notranslate nohighlight">\(X\)</span>. We say that <span class="math notranslate nohighlight">\(X\)</span> is in the far-field of <span class="math notranslate nohighlight">\(Y\)</span> if an admissibility condition is satisfied, that is if  we can effectively low-rank compress the Green’s function interactions between <span class="math notranslate nohighlight">\(X\)</span> and <span class="math notranslate nohighlight">\(Y\)</span>. Otherwise, we say that <span class="math notranslate nohighlight">\(X\)</span> is in the near-field of <span class="math notranslate nohighlight">\(Y\)</span>.</p>
+<p>In order to compress the matrix <span class="math notranslate nohighlight">\(G\)</span> of all possible interactions we need to partiton <span class="math notranslate nohighlight">\(G\)</span> into near-field contributions and far-field contributions. We will only be able to compress the far-field parts.</p>
+<p>In the following section we will discuss tree based partitioning strategies. These will then allow us to identify near-field and far-field interactions. Depending on whether we use Fast Multipole or Hierarchical Matrix methods different types of tree partitioning are commonly used, and we will talk about both of them.</p>
 </section>
 </section>
 </section>
