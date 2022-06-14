@@ -3,5 +3,5 @@ root: intro
 parts:
 - caption: Fast direct solvers
   chapters:
-  - file: low_rank_compression
+  - file: low_rank_compression.ipynb
 
