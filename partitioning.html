@@ -296,6 +296,11 @@ title="Print to PDF"
    Cluster Trees
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#octrees">
+   Octrees
+  </a>
+ </li>
 </ul>
 
     </nav>
@@ -318,6 +323,11 @@ title="Print to PDF"
  <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#cluster-trees">
    Cluster Trees
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#octrees">
+   Octrees
   </a>
  </li>
 </ul>
@@ -534,7 +544,6 @@ title="Print to PDF"
 
 <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
 <span class="n">bounding_box</span> <span class="o">=</span> <span class="n">BoundingBox</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
-
 <span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">([],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
 
 <span class="n">root</span><span class="o">.</span><span class="n">expand_to_tree</span><span class="p">(</span><span class="n">nmin</span><span class="p">)</span>
@@ -550,6 +559,64 @@ Number of leafs: 32
 </div>
 </div>
 </div>
+<p>In the following we discretise the unit circle, generate the corresponding cluster tree and draw the associated leaf boxes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1001</span>
+<span class="n">nmin</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">z</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">z</span><span class="p">)])</span>
+<span class="n">lower_left</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">)</span>
+<span class="n">upper_right</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">bounding_box</span> <span class="o">=</span> <span class="n">BoundingBox</span><span class="p">(</span><span class="n">lower_left</span><span class="p">,</span> <span class="n">upper_right</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">Node</span><span class="p">([],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">bounding_box</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">expand_to_tree</span><span class="p">(</span><span class="n">nmin</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">node_to_patch</span><span class="p">(</span><span class="n">node</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Helper function that turns a node into a matplotlib rectangle patch.&quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Rectangle</span>
+
+    <span class="n">lower_left</span><span class="p">,</span> <span class="n">upper_right</span> <span class="o">=</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">lower_left</span><span class="p">,</span> <span class="n">node</span><span class="o">.</span><span class="n">bounding_box</span><span class="o">.</span><span class="n">upper_right</span><span class="p">)</span>
+
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">lower_left</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="n">upper_right</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">lower_left</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="n">upper_right</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">lower_left</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Rectangle</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">leafs</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">leafs</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lower_left</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">upper_right</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">lower_left</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">upper_right</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">leaf</span> <span class="ow">in</span> <span class="n">leafs</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span>
+        <span class="n">node_to_patch</span><span class="p">(</span><span class="n">leaf</span><span class="p">)</span>
+    <span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x10fb80b20&gt;]
+</pre></div>
+</div>
+<img alt="_images/partitioning_10_1.png" src="_images/partitioning_10_1.png" />
+</div>
+</div>
+<p>The figure demonstrates how the partitioning refines around the circle, attempting to keep similar numbers of points per box. Cluster trees are simple and as shown above, easy to implement. However, their non-uniform structure is not suitable for all types of applications. This is addressed by Octrees.</p>
+</section>
+<section id="octrees">
+<h2>Octrees<a class="headerlink" href="#octrees" title="Permalink to this headline">#</a></h2>
+<p>An octree (or quadtree in two dimensions) is a regular geometric partitioning. Instead of balancing the number of points per box an Octree/Quadtree subdivides a cube/square into 8/4 identically sized child cube/squares. The advantage is a uniform data structure. The boxes on a given level are all identical, making this structure ideal for methods that rely on this uniformity on each level.</p>
+<p>We will not go into implementational details here. Even though Octrees/Quadtrees are simple in principle efficient indexing of them is an interesting problem that is solved by Morton encoding, which is based on Z-curve traversals of the tree. This topic leads very much into the realm of computer graphics and associated topics.</p>
 </section>
 </section>
 
