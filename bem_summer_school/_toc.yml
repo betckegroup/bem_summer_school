@@ -6,3 +6,4 @@ parts:
   - file: low_rank_compression.ipynb
   - file: partitioning.ipynb
   - file: hmatrices.ipynb
+  - file: fmm.ipynb
