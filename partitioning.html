@@ -140,6 +140,11 @@ const thebe_selector_output = ".output, .cell_output"
    -)Matrices
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fmm.html">
+   Fast Multipole Methods
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -388,7 +393,7 @@ title="Print to PDF"
 <p>In the following we implement simple data structures to construct a cluster tree. We have two classes, a bounding box class that stores geometric bounding boxes, and a Node class that stores an index set, allows subdivision and returns depth and leaf information.</p>
 <p>The most important part is the subdivision. For subdivision we choose the dimension along which the bounding box is longest. We then compute the mean of the points in the index set along this dimension and separate the points by those who are smaller than the mean and those which are larger. From these we construct two new nodes.</p>
 <p>There can be the pathological case that all points are aligned along aline. Then this strategy would leave one of the two new index sets empty. In that case we try to subdivide across the other dimension. If that fails as well we raise an exception since in that case all points in the index set are identical.</p>
-<p>The recursive partitioning proceeds until the children have fewer than a given parameter <code class="docutils literal notranslate"><span class="pre">nmin</span></code> indices. This is chosen by the user and determines the depth of the tree.</p>
+<p>The recursive partitioning stops when a number <code class="docutils literal notranslate"><span class="pre">nmin</span></code> of indices is reached. This is user defined and determines the size of the tree.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -548,9 +553,9 @@ title="Print to PDF"
         <span class="k">return</span> <span class="p">[</span><span class="n">node1</span><span class="p">,</span> <span class="n">node2</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">expand_to_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmin</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Recursively subdivide until each index set of the descendents is smaller than nmin.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Recursively subdivide until a minimum size nmin is reached.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nmin</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">&lt;</span> <span class="n">nmin</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subdivide</span><span class="p">()</span>
@@ -653,7 +658,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x1182cec70&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x10fb813d0&gt;]
 </pre></div>
 </div>
 <img alt="_images/partitioning_11_1.png" src="_images/partitioning_11_1.png" />
@@ -687,7 +692,7 @@ title="Print to PDF"
     <span class="k">def</span> <span class="nf">expand_to_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmin</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Subdivide a node recursively until each box has fewer than nmin indices.&quot;&quot;&quot;</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">nmin</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">&lt;</span> <span class="n">nmin</span><span class="p">:</span>
             <span class="k">return</span>
 
         <span class="c1"># Now truly subdivide</span>
@@ -790,7 +795,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x11858a070&gt;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&lt;matplotlib.lines.Line2D at 0x10ffd9a90&gt;]
 </pre></div>
 </div>
 <img alt="_images/partitioning_15_1.png" src="_images/partitioning_15_1.png" />
@@ -812,7 +817,7 @@ title="Print to PDF"
 </ul>
 </li>
 </ul>
-<p>How do we check if an index set <span class="math notranslate nohighlight">\(\I_\tau\times \)</span>J_\nu$ satisfies an admissibility condition?</p>
+<p>How do we check if an index set <span class="math notranslate nohighlight">\(I_\tau\times J_\nu\)</span> satisfies an admissibility condition?</p>
 <p>For a source set <span class="math notranslate nohighlight">\(Y\)</span> and a target set <span class="math notranslate nohighlight">\(X\)</span> we defined earlier the admissibility condition</p>
 <div class="math notranslate nohighlight">
 \[

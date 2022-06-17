@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Fast Multipole Methods &#8212; BEM Summer School - Lecture Notes</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Hierarchical (\(\mathcal{H}\)-)Matrices" href="hmatrices.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">BEM Summer School - Lecture Notes</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    BEM Summer School Lecture Notes
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Fast direct solvers
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="low_rank_compression.html">
+   Low rank compressibility
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="partitioning.html">
+   Tree partitioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hmatrices.html">
+   Hierarchical (
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -)Matrices
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Fast Multipole Methods
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/fmm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/fmm.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#from-particles-to-multipole-expansions">
+   From particles to multipole expansions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multipole-to-multipole-operation">
+   Multipole-To-Multipole Operation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-multipole-to-local-and-local-to-local-map">
+   The Multipole-To-Local and Local-To_Local map
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-to-particle-map">
+   Local-To-Particle Map
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summarizing-the-fmm-flow">
+   Summarizing the FMM flow
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#complexity-of-the-fmm">
+   Complexity of the FMM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#types-of-fmm-implementations">
+   Types of FMM implementations
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Fast Multipole Methods</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#from-particles-to-multipole-expansions">
+   From particles to multipole expansions
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#multipole-to-multipole-operation">
+   Multipole-To-Multipole Operation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#the-multipole-to-local-and-local-to-local-map">
+   The Multipole-To-Local and Local-To_Local map
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#local-to-particle-map">
+   Local-To-Particle Map
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#summarizing-the-fmm-flow">
+   Summarizing the FMM flow
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#complexity-of-the-fmm">
+   Complexity of the FMM
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#types-of-fmm-implementations">
+   Types of FMM implementations
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="fast-multipole-methods">
+<h1>Fast Multipole Methods<a class="headerlink" href="#fast-multipole-methods" title="Permalink to this headline">#</a></h1>
+<p>Fast Multipole Methods allow the <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span> computation of Green’s function interactions. While the algorithmic description is very different to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix methods the underlying idea of evaluating near-field interactions directly and far-field interactions approximately through low-rank representations, is similar.</p>
+<p>There are a multitude of different types of Fast Multipole Methods. In this section we give a very high-level description that avoids technical details as far as possible which distinguish different typs of FMM.</p>
+<p>We assume that we have <span class="math notranslate nohighlight">\(N\)</span> particles <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(i=1, \dots, N\)</span> in <span class="math notranslate nohighlight">\([0, 1]^d\)</span> for <span class="math notranslate nohighlight">\(d=2,3\)</span>. Let <span class="math notranslate nohighlight">\(G\)</span> be the matrix of Green’s function interactions defined by <span class="math notranslate nohighlight">\(G[i, j] = g(x_i, x_j)\)</span>. Hence, we assume that we have the same set of source and target particles. This is no restriction.</p>
+<p>For a given vector <span class="math notranslate nohighlight">\(w\)</span> we want to evaluate the product <span class="math notranslate nohighlight">\(Gw\)</span>.</p>
+<p>As a first step we setup an octree/quadtree over <span class="math notranslate nohighlight">\([0, 1]^3\)</span>. As opposed to the earlier description, where we used an adaptive tree for simplicity we will setup a regular tree of depth <span class="math notranslate nohighlight">\(L\)</span>. The root is level zero.</p>
+<p>For a quadtree this means that we <span class="math notranslate nohighlight">\(4^L\)</span> leaf nodes at the finest level <span class="math notranslate nohighlight">\(L\)</span>.</p>
+<section id="from-particles-to-multipole-expansions">
+<h2>From particles to multipole expansions<a class="headerlink" href="#from-particles-to-multipole-expansions" title="Permalink to this headline">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\tau\)</span> be a leaf node. Denote by <span class="math notranslate nohighlight">\(x_{i_{\ell}}\)</span>, <span class="math notranslate nohighlight">\(\ell=1,\dots, n_{\tau}\)</span> the <span class="math notranslate nohighlight">\(n_{\tau}\)</span> particles associated with <span class="math notranslate nohighlight">\(\tau\)</span>, and by <span class="math notranslate nohighlight">\(B_{\tau}\)</span> the octree/quadtree box associated with <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
+<p>Each particle generates a field <span class="math notranslate nohighlight">\(u_{\ell}^{\tau}(x) := w_{i_{\ell}}g(x, x_{i_{\ell}})\)</span> that is well defined and smooth in <span class="math notranslate nohighlight">\(\mathbb{R}^3\backslash\overline{B_{\tau}}\)</span>. The factor <span class="math notranslate nohighlight">\(w_{i_{\ell}}\)</span> is the corresponding element of our vector <span class="math notranslate nohighlight">\(w\)</span>. These factors are typically called particle weights.</p>
+<p>The total field contribution of the box <span class="math notranslate nohighlight">\(B_{\tau}\)</span> is <span class="math notranslate nohighlight">\(u_{\tau}(x) := \sum_{i_{\ell}}w_{i_{\ell}}g(x, x_{i_{\ell}})\)</span>.</p>
+<p>The first operation in the FMM is the <span class="math notranslate nohighlight">\(P2M\)</span> operation (Particle-to-Multipole), which approximates <span class="math notranslate nohighlight">\(u_{\tau}\)</span> in the exterior of <span class="math notranslate nohighlight">\(B_{\tau}\)</span> by a simpler representation <span class="math notranslate nohighlight">\(\tilde{u}_{\tau} := (P2L)u_{\tau}\)</span>. We do not specify here the algorithmic details but will discuss different types of <span class="math notranslate nohighlight">\(P2M\)</span> operators later. The name Multipole goes back to the first FMM implementations and refers to an approximation of <span class="math notranslate nohighlight">\(u_{\tau}\)</span> that is valid in the exterior of <span class="math notranslate nohighlight">\(B_{\tau}\)</span>.</p>
+</section>
+<section id="multipole-to-multipole-operation">
+<h2>Multipole-To-Multipole Operation<a class="headerlink" href="#multipole-to-multipole-operation" title="Permalink to this headline">#</a></h2>
+<p>We now traverse up the octree/quadtree. Let <span class="math notranslate nohighlight">\(\tau_{j}\)</span> be a node on level <span class="math notranslate nohighlight">\(1 &lt; j &lt; L\)</span>. with box <span class="math notranslate nohighlight">\(B_{\tau_j}\)</span>. The field <span class="math notranslate nohighlight">\(u_{\tau_j}\)</span>, valid in the exterior of <span class="math notranslate nohighlight">\(B_{\tau_j}\)</span> is defined by</p>
+<div class="math notranslate nohighlight">
+\[
+u_{\tau_j}(x) := \sum_{\tau'\in\mathcal{C}(\tau_j)} (M2M)u_{\tau'}(x).
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(M2M\)</span> is an operator that maps fields valid in the exterior of a box to a field valid in the exterior of the parent box. The implementation of the <span class="math notranslate nohighlight">\(M2M\)</span> operator depends on the realisation of the FMM.</p>
+</section>
+<section id="the-multipole-to-local-and-local-to-local-map">
+<h2>The Multipole-To-Local and Local-To_Local map<a class="headerlink" href="#the-multipole-to-local-and-local-to-local-map" title="Permalink to this headline">#</a></h2>
+<p>At this stage we have assigned exterior fields to all boxes in the tree from level to onwards to the leafs. These are the fields generated by the source particles. Now the second phase of the FMM starts in which we evaluate the fields generated by the sources at the targets. Here, we assumed that sources and targets are identical. But this needs not be the case.</p>
+<p>To understand the <span class="math notranslate nohighlight">\(M2L\)</span> (Multipole-To-Local) map we first need to introduce the notion of interaction list.</p>
+<p>For each node <span class="math notranslate nohighlight">\(\tau\)</span> of the tree the interaction list consists of the children of the neighbours of the parent of <span class="math notranslate nohighlight">\(\tau\)</span> that are not themselves direct neighbours of <span class="math notranslate nohighlight">\(\tau\)</span>. We denote the interaction list of <span class="math notranslate nohighlight">\(\tau\)</span> by <span class="math notranslate nohighlight">\(\mathcal{I}(\tau)\)</span>.</p>
+<p>In addition, we denote by <span class="math notranslate nohighlight">\(\mathcal{P}(\tau)\)</span> the parent of <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(B_{\tau}\)</span> the box associated with <span class="math notranslate nohighlight">\(\tau\)</span>,</p>
+<p>We define the local field <span class="math notranslate nohighlight">\(u_{\tau}^{local}\)</span> by</p>
+<div class="math notranslate nohighlight">
+\[
+u_{\tau}^{local} := (L2L)u_{\mathcal{P}(\tau)}\sum_{\tau' \in \mathcal{I}(\tau)}(M2L)u_{\tau}.
+\]</div>
+<p>The operator <span class="math notranslate nohighlight">\((L2L)\)</span> is a local-to-local map, meaning it maps a local field valid in the parent box to a local field valid in a child box. The L2L takes into account field contributions that have been computed at a lower level of the tree. This is added up to the contributions of all the fields generated by boxes in the interaction list.</p>
+<p>This map creates local field from the second level up down to the leaf level. On level 1 there is no interaction list yet and no contribution from the root.</p>
+</section>
+<section id="local-to-particle-map">
+<h2>Local-To-Particle Map<a class="headerlink" href="#local-to-particle-map" title="Permalink to this headline">#</a></h2>
+<p>This is the final step in the FMM. We have computed from the top of the tree down to the leafs all local fields generated from the interaction list and parent contributions.</p>
+<p>Finally, at the leaf-level we compute for each box <span class="math notranslate nohighlight">\(\tau\)</span> the field values at the leaf particles <span class="math notranslate nohighlight">\(x_{i_\ell}\in B_{\tau}\)</span>. We have two contributions, namely from the local field <span class="math notranslate nohighlight">\(u_{\tau}^{local}\)</span> and from the fields at the leafs located by the particles in the neighbouring boxes. We denote the neighbours of <span class="math notranslate nohighlight">\(B_{\tau}\)</span> by <span class="math notranslate nohighlight">\(\mathcal{N}(\tau)\)</span>. Hence, the total field value is given as</p>
+<div class="math notranslate nohighlight">
+\[
+u_{\tau}^{local}(x_{i_\ell}) = \left[(L2P)u_{\tau}^{local}\right](x_{i_\ell}) + \sum_{\tau'\in \mathcal{N}(\tau)}\sum_{i_\tau'}g(x_{i_{\ell}}, x_{i_\tau'}).
+\]</div>
+<p>The <span class="math notranslate nohighlight">\(L2P\)</span> operator is usually a simple direct evaluation of fields from the representation given in a local basis.</p>
+</section>
+<section id="summarizing-the-fmm-flow">
+<h2>Summarizing the FMM flow<a class="headerlink" href="#summarizing-the-fmm-flow" title="Permalink to this headline">#</a></h2>
+<p>Let us summarize the FMM Steps.</p>
+<ul class="simple">
+<li><p>Phase 1 (Upward traversal of tree)</p>
+<ul>
+<li><p>Compute exterior field approximations in each leaf box (P2M)</p></li>
+<li><p>From the leaf up to level 2 combine the exterior fields of the children boxes
+into an exterior field approximation of the parent box (M2M)</p></li>
+</ul>
+</li>
+<li><p>Phase 2 (Downward traversal of tree)</p>
+<ul>
+<li><p>From level 2 onwards down to the leaf level compute local fields
+by summing up the contributions from the interaction list and from the local
+field of the parents (M2L + L2L)</p></li>
+<li><p>On the leaf level evaluate the local fields at the target particle positions and
+add the contributions from the direct interactions with particles in neighbouring boxes (L2P + P2P)</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="complexity-of-the-fmm">
+<h2>Complexity of the FMM<a class="headerlink" href="#complexity-of-the-fmm" title="Permalink to this headline">#</a></h2>
+<p>We note that the total number of boxes in an octree/quadtree is <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
+<p>In phase 1 in each leaf box we have to convert the fields generated by the source particles into exterior field expansions for each box. The cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span> since we have <span class="math notranslate nohighlight">\(N\)</span> particles.</p>
+<p>We then use <span class="math notranslate nohighlight">\(M2M\)</span> operators to pass the fields upwards. For each box in level <span class="math notranslate nohighlight">\(2\)</span> and above this is one translation operation, hence a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
+<p>In phase 2 we traverse the tree downwards from level 2 to the leafs. The number of boxes in the interaction list is constant, independent of <span class="math notranslate nohighlight">\(N\)</span>. Hence, again we have a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
+<p>Finally, at the leafs we compute the evaluation of the local fields at the particles and add in the direct neighbour contributions. Again, this is a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
+<p>Hence, the full cost of the FMM is <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>. The above estimate however only works if the cost of the translation operators is independent of <span class="math notranslate nohighlight">\(N\)</span>. Here, the low-rank expansions come into play.</p>
+<p>We recall that separable expansions of a given degree are the continuous equivalent of low-rank expansions. Analytic FMM methods use separable expansions into suitable basis functions of fixed degree <span class="math notranslate nohighlight">\(k\)</span> to represent the translation operators. This degree <span class="math notranslate nohighlight">\(k\)</span> is chosen independently of <span class="math notranslate nohighlight">\(N\)</span>. Algebraic FMM methods often use mixtures of interpolation/approximation and matrix low-rank techniques to compute translation operators with a fixed rank <span class="math notranslate nohighlight">\(k'\)</span> that is also independent of <span class="math notranslate nohighlight">\(N\)</span>.</p>
+</section>
+<section id="types-of-fmm-implementations">
+<h2>Types of FMM implementations<a class="headerlink" href="#types-of-fmm-implementations" title="Permalink to this headline">#</a></h2>
+<p>We have so far described the general flow of every FMM realisation. The difference between implementations is in how the various translation operators are implemented.</p>
+<p>Frequently used implementations include the following.</p>
+<ul class="simple">
+<li><p>The classical Greengard/Rohklin FMM based on spherical harmonics expansions. This is the classical FMM as originally described by Greengard and Rohklin. It is based on approximating fields by spherical harmonic expansions and the translation of these expansions between boxes.
+Over the years a number of improvements have been made to these methods. They are memory efficient and fast.</p></li>
+<li><p>Kernel-Independent FMM. The KIFMM approximates local and exterior fields by discrete single-layer potential representations over the boundary of a box. Translation operators are implemented by a mixture of approximation operators, low-rank approximations, and Fast Fourier Transforms, depending on the implementational details. These methods are considered very efficient for high accuracy requirements.</p></li>
+<li><p>Black-Box FMM. The Black-Box FMM uses Chebychev interpolation to represent kernels. Translation operators are implemented by a mixture of low-rank approximation techniques and direct evaluation of Chebychev interpolation polynomials.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="hmatrices.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Hierarchical (<span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-)Matrices</p>
+        </div>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Timo Betcke<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

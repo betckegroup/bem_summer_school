@@ -54,6 +54,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Fast Multipole Methods" href="fmm.html" />
     <link rel="prev" title="Tree partitioning" href="partitioning.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -139,6 +140,11 @@ const thebe_selector_output = ".output, .cell_output"
    -)Matrices
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fmm.html">
+   Fast Multipole Methods
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -190,6 +196,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/hmatrices.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -280,6 +315,14 @@ title="Print to PDF"
    -matrices.
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mathcal-h-matrix-operations">
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -matrix operations
+  </a>
+ </li>
 </ul>
 
     </nav>
@@ -308,6 +351,14 @@ title="Print to PDF"
    -matrices.
   </a>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mathcal-h-matrix-operations">
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -matrix operations
+  </a>
+ </li>
 </ul>
 
                         </nav>
@@ -328,13 +379,43 @@ title="Print to PDF"
 <section id="from-block-cluster-trees-to-mathcal-h-matrices">
 <h2>From block-cluster trees to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices.<a class="headerlink" href="#from-block-cluster-trees-to-mathcal-h-matrices" title="Permalink to this headline">#</a></h2>
 <p><span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are algebraic structures operating on block-cluster trees. Assume we have target and source index sets <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span>, associated cluster trees <span class="math notranslate nohighlight">\(T_I\)</span> and <span class="math notranslate nohighlight">\(T_J\)</span>, and block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span>.</p>
-<p>Let <span class="math notranslate nohighlight">\(G\)</span> be the matrix of Green’s function interactions <span class="math notranslate nohighlight">\(G[i, j] = g(x_i, y_j)\)</span>. The compressed <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix representation of <span class="math notranslate nohighlight">\(G\)</span> is defined over the block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span> in the following way.</p>
+<p>Formally, the set <span class="math notranslate nohighlight">\(\mathcal{H}(T_{I\times J}, k)\)</span> of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices over the block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span> can be defined as</p>
+<div class="math notranslate nohighlight">
+\[
+\mathcal{H}(T_{I\times J}, k) := \{A\in\mathbb{C}^{I\times J}: \text{rank}(A_{I_\tau, J_\nu}) &lt; k\text{ if } \tau\times\nu \text{ is admissible leaf of } T_{I\times J}\}.
+\]</div>
+<p>To compress a given matrix <span class="math notranslate nohighlight">\(A\)</span> over a block-cluster tree into a compressed <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix we do the following.</p>
 <ul class="simple">
-<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is not admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(G) := G[I_\tau, J_\nu]\)</span>, that is the <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix stores the direct dense representation of the interactions between <span class="math notranslate nohighlight">\(I_\tau\)</span> and <span class="math notranslate nohighlight">\(J_\nu\)</span>.</p></li>
-<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(G):= AB^H\)</span>, where <span class="math notranslate nohighlight">\(G[I_\tau, J_{\nu}]\approx AB^H\)</span> is a low-rank representation of rank at most <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is not admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(A) := A[I_\tau, J_\nu]\)</span>, that is the <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix stores the direct dense representation of the interactions between <span class="math notranslate nohighlight">\(I_\tau\)</span> and <span class="math notranslate nohighlight">\(J_\nu\)</span>.</p></li>
+<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(A):= CZ^H\)</span>, where <span class="math notranslate nohighlight">\(A[I_\tau, J_{\nu}]\approx CZ^H\)</span> is a low-rank representation of rank at most <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
 </ul>
-<p>Hence, in the below representation of a block-cluster tree every green box has a low-rank representation, and every red box has a dense representation.</p>
+<p>In the below representation of a block-cluster tree every green box has a low-rank representation, and every red box has a dense representation.</p>
 <p><img alt="hmatrix" src="_images/block_cluster_tree.png" /></p>
+<p>This structure is algorithmically extremely simple. For low-rank compression ACA is often used as it only needs to look at a subset of the rows and columns of a matrix. The generation of an H-Matrix representation parallelises perfectly as all blocks are independent from each other. This also makes it easy to distribute blocks across parallel clusters.</p>
+<p>Evaluating a matvec with a <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix is straight forward. We simply iterate through all leaf blocks of the block-cluster tree, compute the local products and sum up the results. For low-rank blocks we evaluate the matvec as <span class="math notranslate nohighlight">\(y = (CZV^H)x = C(V^Hx)\)</span>. This guarantees that the local complexity is <span class="math notranslate nohighlight">\(\mathcal{O}(n_{min}k)\)</span>. Only for a small number of non-admissible blocks we have a locally quadratic complexity.</p>
+<p>One can give an exact analysis of the memory requirements of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices. Here, we will not go into the technicalities. For typical applications we obtain a memory complexity and complexity of matrix-vector products of <span class="math notranslate nohighlight">\(\mathcal{O}(N\log N)\)</span>. Compare to standard dense matrices, which have a memory and matvec complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span>. This allows us to efficiently treat problems with millions of unknowns.</p>
+<p>The global storage and matvec cost scales like <span class="math notranslate nohighlight">\(\mathcal{O}(N\log N)\)</span> for typical scenarios. This compares extremely favourably with dense matrix formats that require <span class="math notranslate nohighlight">\(\mathcal{O}(N^2)\)</span> operations.</p>
+</section>
+<section id="mathcal-h-matrix-operations">
+<h2><span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix operations<a class="headerlink" href="#mathcal-h-matrix-operations" title="Permalink to this headline">#</a></h2>
+<p>It is possible to define the usual matrix addition and multiplication operations over <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices. The idea is based on using the recursive block-structure until on the leaf level we are dealing with operations on local low-rank or dense matrices. However, if we add two low-rank matrices of rank at most <span class="math notranslate nohighlight">\(k\)</span> the result will have a rank bounded by <span class="math notranslate nohighlight">\(2k\)</span>. So we need to recompress to achieve rank <span class="math notranslate nohighlight">\(k\)</span> again.</p>
+<p>With multiplication and addition operations available we can define an approximate <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix inverse.</p>
+<p>Recall that we can write the inverse of a matrix</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+M = \begin{bmatrix}M_{11} &amp; M_{12} \\ 
+                   M_{21} &amp; M_{22}
+    \end{bmatrix}
+\end{split}\]</div>
+<p>as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+M = \begin{bmatrix}M_{11}^{-1} + M_{11}^{-1}M_{12}S^{-1}M_{21}M_{11}^{-1} &amp; -M_{11}^{-1}M_{12}S^{-1}\\ -S^{-1}M_{21}M_{11}^{-1} &amp; S^{-1}
+     \end{bmatrix}
+\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(S := M_{22} - M_{21}M_{11}^{-1}M_{12}\)</span>.</p>
+<p>The idea is to recursively apply this inversion to an <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix$, where at the lowest level we only require inverses of non-admissible blocks and matrix products/additions with low-rank matrices.</p>
+<p>In a similar manner it is possible to recursively define a <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix <span class="math notranslate nohighlight">\(LU\)</span> decomposition.</p>
 </section>
 </section>
 
@@ -371,6 +452,13 @@ title="Print to PDF"
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">Tree partitioning</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="fmm.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Fast Multipole Methods</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>
