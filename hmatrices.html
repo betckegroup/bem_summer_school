@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Hierarchical Matrices &#8212; BEM Summer School - Lecture Notes</title>
+    <title>Hierarchical (\(\mathcal{H}\)-)Matrices &#8212; BEM Summer School - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -132,7 +132,11 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   Hierarchical Matrices
+   Hierarchical (
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -)Matrices
   </a>
  </li>
 </ul>
@@ -245,23 +249,68 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#from-block-cluster-trees-to-mathcal-h-matrices">
+   From block-cluster trees to
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -matrices.
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Hierarchical Matrices</h1>
+                <h1>Hierarchical (\mathcal{H}-)Matrices</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#from-block-cluster-trees-to-mathcal-h-matrices">
+   From block-cluster trees to
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -matrices.
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -269,14 +318,24 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="hierarchical-matrices">
-<h1>Hierarchical Matrices<a class="headerlink" href="#hierarchical-matrices" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="hierarchical-mathcal-h-matrices">
+<h1>Hierarchical (<span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-)Matrices<a class="headerlink" href="#hierarchical-mathcal-h-matrices" title="Permalink to this headline">#</a></h1>
 <p>In this section we will discuss hierarchical matrices (or <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices). These allow the representation of and matrix vector products with the matrix of Green’s functions interactions with a complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(N\log N)\)</span>, where <span class="math notranslate nohighlight">\(N\)</span> is the number of evaluation points.</p>
 <p>Another nice feature of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices is that it is straight forward to design algorithms for an approximate <span class="math notranslate nohighlight">\(LU\)</span> decomposition and approximate inverse of these matrices with also near-linear complexity.</p>
 <p>The disadvantage of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices is that compared to Fast Multipole or <span class="math notranslate nohighlight">\(\mathcal{H}^2\)</span> matrix techniques they do not have linear complexity (the <span class="math notranslate nohighlight">\(\log\)</span> factor becomes important for very large problems), and they tend to have also in practice larger memory requirements than these techniques.</p>
 <p>Nevertheless, the algorithmic implementation is very simple and parallelisation is easy. This is why they are still very popular. Moreover, in many practical applications it seems the case that also for oscillatory problems they keep good performance into the medium wavenumber regime (though their asymptotic complexity is not optimal here).</p>
 <p>In the literature <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix technqiues are also often called ACA methods. The historical reason is that <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are often implemented using adaptive cross approximation. Nevertheless, this is an inaccurate description as ACA is merely the algorithm that low-rank compresses the blocks in an <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix. Other low-rank compression techniques can equally be applied.</p>
-<p>In the following we first need to introduce another tree structure, namely block cluster trees. These will then allow us to fully describle <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices.</p>
+<section id="from-block-cluster-trees-to-mathcal-h-matrices">
+<h2>From block-cluster trees to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices.<a class="headerlink" href="#from-block-cluster-trees-to-mathcal-h-matrices" title="Permalink to this headline">#</a></h2>
+<p><span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are algebraic structures operating on block-cluster trees. Assume we have target and source index sets <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span>, associated cluster trees <span class="math notranslate nohighlight">\(T_I\)</span> and <span class="math notranslate nohighlight">\(T_J\)</span>, and block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(G\)</span> be the matrix of Green’s function interactions <span class="math notranslate nohighlight">\(G[i, j] = g(x_i, y_j)\)</span>. The compressed <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix representation of <span class="math notranslate nohighlight">\(G\)</span> is defined over the block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span> in the following way.</p>
+<ul class="simple">
+<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is not admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(G) := G[I_\tau, J_\nu]\)</span>, that is the <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix stores the direct dense representation of the interactions between <span class="math notranslate nohighlight">\(I_\tau\)</span> and <span class="math notranslate nohighlight">\(J_\nu\)</span>.</p></li>
+<li><p>If the node <span class="math notranslate nohighlight">\(\tau\times \nu\)</span> is admissible then <span class="math notranslate nohighlight">\(\mathcal{H}_{\tau\times\nu}(G):= AB^H\)</span>, where <span class="math notranslate nohighlight">\(G[I_\tau, J_{\nu}]\approx AB^H\)</span> is a low-rank representation of rank at most <span class="math notranslate nohighlight">\(k\)</span>.</p></li>
+</ul>
+<p>Hence, in the below representation of a block-cluster tree every green box has a low-rank representation, and every red box has a dense representation.</p>
+<p><img alt="hmatrix" src="_images/block_cluster_tree.png" /></p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
