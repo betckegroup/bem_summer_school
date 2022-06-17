@@ -5,4 +5,4 @@ parts:
   chapters:
   - file: low_rank_compression.ipynb
   - file: partitioning.ipynb
-
+  - file: hmatrices.ipynb
