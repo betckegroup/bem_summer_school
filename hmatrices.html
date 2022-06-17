@@ -4,8 +4,9 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; BEM Summer School - Lecture Notes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Hierarchical Matrices &#8212; BEM Summer School - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -49,8 +50,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
-    <link rel="index" title="Index" href="#" />
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Tree partitioning" href="partitioning.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -115,7 +119,7 @@ const thebe_selector_output = ".output, .cell_output"
   Fast direct solvers
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="low_rank_compression.html">
    Low rank compressibility
@@ -126,8 +130,8 @@ const thebe_selector_output = ".output, .cell_output"
    Tree partitioning
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="hmatrices.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Hierarchical Matrices
   </a>
  </li>
@@ -196,6 +200,52 @@ title="Fullscreen mode"
 
 </button>
 
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/hmatrices.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
     </div>
 </div>
 
@@ -207,7 +257,7 @@ title="Fullscreen mode"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1></h1>
+                <h1>Hierarchical Matrices</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -219,13 +269,35 @@ title="Fullscreen mode"
                 
               <div>
                 
+  <section class="tex2jax_ignore mathjax_ignore" id="hierarchical-matrices">
+<h1>Hierarchical Matrices<a class="headerlink" href="#hierarchical-matrices" title="Permalink to this headline">#</a></h1>
+<p>In this section we will discuss hierarchical matrices (or <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices). These allow the representation of and matrix vector products with the matrix of Green’s functions interactions with a complexity of <span class="math notranslate nohighlight">\(\mathcal{O}(N\log N)\)</span>, where <span class="math notranslate nohighlight">\(N\)</span> is the number of evaluation points.</p>
+<p>Another nice feature of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices is that it is straight forward to design algorithms for an approximate <span class="math notranslate nohighlight">\(LU\)</span> decomposition and approximate inverse of these matrices with also near-linear complexity.</p>
+<p>The disadvantage of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices is that compared to Fast Multipole or <span class="math notranslate nohighlight">\(\mathcal{H}^2\)</span> matrix techniques they do not have linear complexity (the <span class="math notranslate nohighlight">\(\log\)</span> factor becomes important for very large problems), and they tend to have also in practice larger memory requirements than these techniques.</p>
+<p>Nevertheless, the algorithmic implementation is very simple and parallelisation is easy. This is why they are still very popular. Moreover, in many practical applications it seems the case that also for oscillatory problems they keep good performance into the medium wavenumber regime (though their asymptotic complexity is not optimal here).</p>
+<p>In the literature <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix technqiues are also often called ACA methods. The historical reason is that <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are often implemented using adaptive cross approximation. Nevertheless, this is an inaccurate description as ACA is merely the algorithm that low-rank compresses the blocks in an <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix. Other low-rank compression techniques can equally be applied.</p>
+<p>In the following we first need to introduce another tree structure, namely block cluster trees. These will then allow us to fully describle <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices.</p>
+</section>
 
-<h1 id="index">Index</h1>
-
-<div class="genindex-jumpbox">
- 
-</div>
-
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
 
               </div>
               
@@ -234,6 +306,13 @@ title="Fullscreen mode"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="partitioning.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Tree partitioning</p>
+        </div>
+    </a>
 </div>
             </footer>
         </div>
