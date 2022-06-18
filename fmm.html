@@ -306,6 +306,11 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#basic-ideas">
+   Basic ideas
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#from-particles-to-multipole-expansions">
    From particles to multipole expansions
   </a>
@@ -360,6 +365,11 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#basic-ideas">
+   Basic ideas
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#from-particles-to-multipole-expansions">
    From particles to multipole expansions
   </a>
@@ -408,48 +418,72 @@ title="Print to PDF"
 <h1>Fast Multipole Methods<a class="headerlink" href="#fast-multipole-methods" title="Permalink to this headline">#</a></h1>
 <p>Fast Multipole Methods allow the <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span> computation of Green’s function interactions. While the algorithmic description is very different to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix methods the underlying idea of evaluating near-field interactions directly and far-field interactions approximately through low-rank representations, is similar.</p>
 <p>There are a multitude of different types of Fast Multipole Methods. In this section we give a very high-level description that avoids technical details as far as possible which distinguish different typs of FMM.</p>
+<section id="basic-ideas">
+<h2>Basic ideas<a class="headerlink" href="#basic-ideas" title="Permalink to this headline">#</a></h2>
 <p>We assume that we have <span class="math notranslate nohighlight">\(N\)</span> particles <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(i=1, \dots, N\)</span> in <span class="math notranslate nohighlight">\([0, 1]^d\)</span> for <span class="math notranslate nohighlight">\(d=2,3\)</span>. Let <span class="math notranslate nohighlight">\(G\)</span> be the matrix of Green’s function interactions defined by <span class="math notranslate nohighlight">\(G[i, j] = g(x_i, x_j)\)</span>. Hence, we assume that we have the same set of source and target particles. This is no restriction.</p>
-<p>For a given vector <span class="math notranslate nohighlight">\(w\)</span> we want to evaluate the product <span class="math notranslate nohighlight">\(Gw\)</span>.</p>
-<p>As a first step we setup an octree/quadtree over <span class="math notranslate nohighlight">\([0, 1]^3\)</span>. As opposed to the earlier description, where we used an adaptive tree for simplicity we will setup a regular tree of depth <span class="math notranslate nohighlight">\(L\)</span>. The root is level zero.</p>
-<p>For a quadtree this means that we <span class="math notranslate nohighlight">\(4^L\)</span> leaf nodes at the finest level <span class="math notranslate nohighlight">\(L\)</span>.</p>
+<p>For a given vector <span class="math notranslate nohighlight">\(w\)</span> we want to evaluate the matvec <span class="math notranslate nohighlight">\(z = GW\)</span>, or in other words, the sums</p>
+<div class="math notranslate nohighlight">
+\[
+z_i = \sum_{j=1^N}g(x_i, x_j)w_j.
+\]</div>
+<p>As a first step we setup a quadtree/octree over <span class="math notranslate nohighlight">\([0, 1]^d\)</span>. As opposed to the earlier descriptions, where we used an adaptive tree for simplicity we will setup a regular tree of depth <span class="math notranslate nohighlight">\(L\)</span>. The root is level zero. The set of leaf boxes is denoted by <span class="math notranslate nohighlight">\(\mathcal{L}\)</span>. Each box in the tree gets a unique integer identifier <span class="math notranslate nohighlight">\(m\)</span> that is identified with an associated box <span class="math notranslate nohighlight">\(B_m\)</span> in the octree/quadtree. By <span class="math notranslate nohighlight">\(\text{level}(m)\)</span> we denote the level of the box with identifier <span class="math notranslate nohighlight">\(m\)</span>. The set of children of this box are denoted by <span class="math notranslate nohighlight">\(\mathcal{C}(m)\)</span>, and the parent is denoted by <span class="math notranslate nohighlight">\(\mathcal{P}(m)\)</span>.</p>
+<p>We denote by <span class="math notranslate nohighlight">\(x_{i_{\ell}^{m}}\)</span>, <span class="math notranslate nohighlight">\(\ell=1, \dots, N_m\)</span> the particles contained in the box <span class="math notranslate nohighlight">\(m\in\mathcal{L}\)</span>. Hence, <span class="math notranslate nohighlight">\(N = \sum_{m\in\mathcal{L}}N_{m}\)</span>. For simplicity we assume that all leaf boxes contain particles. In practical implementations, if a leaf box has no particles it is just omitted.</p>
+<p>Consider the below setup on a given quadtree/octree level. The blue box is the <strong>target</strong> box. We want to compute the interactions of particles in the other boxes with the given target box.</p>
+<p><img alt="interaction_list" src="_images/interaction_list.png" /></p>
+<p>We denote all boxes directly adjacent to our target box as nearfield and call it <span class="math notranslate nohighlight">\(\mathcal{N}(m)\)</span>. These boxes do not satisfy an admissibility condition. Hence, we cannot use efficient low-rank evaluations with them. However, for all other boxes we could use a low-rank evaluation as those boxes satisfy an admissibility condition. This would give us some improvement as we increase <span class="math notranslate nohighlight">\(N\)</span>. But, we are then also getting more and more direct evaluations in the nearfield and the method is not efficient.</p>
+<p>The idea of the FMM is to deal with the nearfield by recursing down the tree. Assume that we have already computed on the parent level all admissible interactions, that is everything but the nearfield neighbours on the parent level.</p>
+<p>We now move down again to the level of our target box and split the children of the neighbours of the parent into nearfield boxes (those adjacent to our target) and boxes
+in the interaction list. We denote the interaction list of a target box with index <span class="math notranslate nohighlight">\(m\)</span> by <span class="math notranslate nohighlight">\(\mathcal{I}(m)\)</span>.</p>
+<p>The interaction list is the part of the domain that could not
+be treated on the coarser level as it did not satisfy the admissibility condition, but
+can be treated on the finer level. We can now use efficient low-rank methods for this interaction list.</p>
+<p>We recursively continue to treat the nearfield of
+the target box on the finer level. Once we are at the finest level we simply treat the
+nearfield interactions via direct evaluation.</p>
+</section>
 <section id="from-particles-to-multipole-expansions">
 <h2>From particles to multipole expansions<a class="headerlink" href="#from-particles-to-multipole-expansions" title="Permalink to this headline">#</a></h2>
-<p>Let <span class="math notranslate nohighlight">\(\tau\)</span> be a leaf node. Denote by <span class="math notranslate nohighlight">\(x_{i_{\ell}}\)</span>, <span class="math notranslate nohighlight">\(\ell=1,\dots, n_{\tau}\)</span> the <span class="math notranslate nohighlight">\(n_{\tau}\)</span> particles associated with <span class="math notranslate nohighlight">\(\tau\)</span>, and by <span class="math notranslate nohighlight">\(B_{\tau}\)</span> the octree/quadtree box associated with <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
-<p>Each particle generates a field <span class="math notranslate nohighlight">\(u_{\ell}^{\tau}(x) := w_{i_{\ell}}g(x, x_{i_{\ell}})\)</span> that is well defined and smooth in <span class="math notranslate nohighlight">\(\mathbb{R}^3\backslash\overline{B_{\tau}}\)</span>. The factor <span class="math notranslate nohighlight">\(w_{i_{\ell}}\)</span> is the corresponding element of our vector <span class="math notranslate nohighlight">\(w\)</span>. These factors are typically called particle weights.</p>
-<p>The total field contribution of the box <span class="math notranslate nohighlight">\(B_{\tau}\)</span> is <span class="math notranslate nohighlight">\(u_{\tau}(x) := \sum_{i_{\ell}}w_{i_{\ell}}g(x, x_{i_{\ell}})\)</span>.</p>
-<p>The first operation in the FMM is the <span class="math notranslate nohighlight">\(P2M\)</span> operation (Particle-to-Multipole), which approximates <span class="math notranslate nohighlight">\(u_{\tau}\)</span> in the exterior of <span class="math notranslate nohighlight">\(B_{\tau}\)</span> by a simpler representation <span class="math notranslate nohighlight">\(\tilde{u}_{\tau} := (P2L)u_{\tau}\)</span>. We do not specify here the algorithmic details but will discuss different types of <span class="math notranslate nohighlight">\(P2M\)</span> operators later. The name Multipole goes back to the first FMM implementations and refers to an approximation of <span class="math notranslate nohighlight">\(u_{\tau}\)</span> that is valid in the exterior of <span class="math notranslate nohighlight">\(B_{\tau}\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(m\in\mathcal{L}\)</span> be a leaf index. Each particle in the associated box generates a field <span class="math notranslate nohighlight">\(u_{i_\ell^{m}}^{ext}(x) := w_{i_{\ell}^m}g(x, x_{i_{\ell}^m})\)</span>, <span class="math notranslate nohighlight">\(\ell=1, \dots, N_m\)</span> that is well defined and smooth in <span class="math notranslate nohighlight">\(\mathbb{R}^3\backslash\overline{B_{m}}\)</span>. The factor <span class="math notranslate nohighlight">\(w_{i_{\ell}^m}\)</span> is the corresponding element of our vector <span class="math notranslate nohighlight">\(w\)</span>. These factors are typically called particle weights.</p>
+<p>The total field contribution of the box <span class="math notranslate nohighlight">\(B_{m}\)</span> is <span class="math notranslate nohighlight">\(u_{m}^{ext}(x) := \sum_{\ell=1}^{N_{m}}w_{i_{\ell}^m}g(x, x_{i_{\ell}^m})\)</span>.</p>
+<p>The first operation in the FMM is the <span class="math notranslate nohighlight">\(P2M\)</span> operation (Particle-to-Multipole), which approximates the fields generated from the individual particles by a representation that is
+independent of the number of particles in the box.</p>
+<p>With the <span class="math notranslate nohighlight">\(P2M\)</span> operator we define the total field <span class="math notranslate nohighlight">\(u_m^{ext}\)</span> in the exterior of <span class="math notranslate nohighlight">\(B_m\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+u_m^{ext} : = \sum_{\ell=1}^{N_m} (P2M)u_{i_\ell^{m}}^{ext}(x)
+\]</div>
+<p>We do not specify here the algorithmic details but will discuss different types of <span class="math notranslate nohighlight">\(P2M\)</span> operators later.</p>
+<p>The name <em>multipole</em> goes back to the first FMM implementations and refers to an approximation of <span class="math notranslate nohighlight">\(u_{m}^{ext}\)</span> by a multipole series.</p>
 </section>
 <section id="multipole-to-multipole-operation">
 <h2>Multipole-To-Multipole Operation<a class="headerlink" href="#multipole-to-multipole-operation" title="Permalink to this headline">#</a></h2>
-<p>We now traverse up the octree/quadtree. Let <span class="math notranslate nohighlight">\(\tau_{j}\)</span> be a node on level <span class="math notranslate nohighlight">\(1 &lt; j &lt; L\)</span>. with box <span class="math notranslate nohighlight">\(B_{\tau_j}\)</span>. The field <span class="math notranslate nohighlight">\(u_{\tau_j}\)</span>, valid in the exterior of <span class="math notranslate nohighlight">\(B_{\tau_j}\)</span> is defined by</p>
+<p>We now traverse up the octree/quadtree. Consider a box <span class="math notranslate nohighlight">\(m\)</span> with <span class="math notranslate nohighlight">\(1 &lt; \text{level}(m) &lt; L\)</span>.</p>
+<p>The field <span class="math notranslate nohighlight">\(u_{m}^{ext}\)</span>, valid in the exterior of <span class="math notranslate nohighlight">\(B_{m}\)</span> is defined by</p>
 <div class="math notranslate nohighlight">
 \[
-u_{\tau_j}(x) := \sum_{\tau'\in\mathcal{C}(\tau_j)} (M2M)u_{\tau'}(x).
+u_{m}^{ext}(x) := \sum_{m'\in\mathcal{C}(m)} (M2M)u_{m'}(x).
 \]</div>
 <p>Here, <span class="math notranslate nohighlight">\(M2M\)</span> is an operator that maps fields valid in the exterior of a box to a field valid in the exterior of the parent box. The implementation of the <span class="math notranslate nohighlight">\(M2M\)</span> operator depends on the realisation of the FMM.</p>
 </section>
 <section id="the-multipole-to-local-and-local-to-local-map">
 <h2>The Multipole-To-Local and Local-To_Local map<a class="headerlink" href="#the-multipole-to-local-and-local-to-local-map" title="Permalink to this headline">#</a></h2>
-<p>At this stage we have assigned exterior fields to all boxes in the tree from level to onwards to the leafs. These are the fields generated by the source particles. Now the second phase of the FMM starts in which we evaluate the fields generated by the sources at the targets. Here, we assumed that sources and targets are identical. But this needs not be the case.</p>
+<p>At this stage we have assigned exterior fields to all boxes in the tree from the leafs up to level 2. These are the fields generated by the source particles. Now the second phase of the FMM starts in which we evaluate the fields at the target boxes.</p>
 <p>To understand the <span class="math notranslate nohighlight">\(M2L\)</span> (Multipole-To-Local) map we first need to introduce the notion of interaction list.</p>
-<p>For each node <span class="math notranslate nohighlight">\(\tau\)</span> of the tree the interaction list consists of the children of the neighbours of the parent of <span class="math notranslate nohighlight">\(\tau\)</span> that are not themselves direct neighbours of <span class="math notranslate nohighlight">\(\tau\)</span>. We denote the interaction list of <span class="math notranslate nohighlight">\(\tau\)</span> by <span class="math notranslate nohighlight">\(\mathcal{I}(\tau)\)</span>.</p>
-<p>In addition, we denote by <span class="math notranslate nohighlight">\(\mathcal{P}(\tau)\)</span> the parent of <span class="math notranslate nohighlight">\(\tau\)</span>.</p>
-<p>Let <span class="math notranslate nohighlight">\(B_{\tau}\)</span> the box associated with <span class="math notranslate nohighlight">\(\tau\)</span>,</p>
-<p>We define the local field <span class="math notranslate nohighlight">\(u_{\tau}^{local}\)</span> by</p>
+<p>Given a target box <span class="math notranslate nohighlight">\(B_m\)</span> with index <span class="math notranslate nohighlight">\(m\)</span>. We define the local field <span class="math notranslate nohighlight">\(u_{m}^{local}\)</span> by</p>
 <div class="math notranslate nohighlight">
 \[
-u_{\tau}^{local} := (L2L)u_{\mathcal{P}(\tau)}\sum_{\tau' \in \mathcal{I}(\tau)}(M2L)u_{\tau}.
+u_{m}^{local} := (L2L)u_{\mathcal{P}(m)}^{local}\sum_{m' \in \mathcal{I}(m)}(M2L)u_{m'}^{ext}.
 \]</div>
-<p>The operator <span class="math notranslate nohighlight">\((L2L)\)</span> is a local-to-local map, meaning it maps a local field valid in the parent box to a local field valid in a child box. The L2L takes into account field contributions that have been computed at a lower level of the tree. This is added up to the contributions of all the fields generated by boxes in the interaction list.</p>
+<p>The operator <span class="math notranslate nohighlight">\((L2L)\)</span> is a local-to-local map, meaning it maps a local field valid in the parent box to a local field valid in a child box. The L2L takes into account field contributions that have been computed at a coarser level. This is added up to the contributions of all the fields generated by boxes in the interaction list.</p>
 <p>This map creates local field from the second level up down to the leaf level. On level 1 there is no interaction list yet and no contribution from the root.</p>
 </section>
 <section id="local-to-particle-map">
 <h2>Local-To-Particle Map<a class="headerlink" href="#local-to-particle-map" title="Permalink to this headline">#</a></h2>
 <p>This is the final step in the FMM. We have computed from the top of the tree down to the leafs all local fields generated from the interaction list and parent contributions.</p>
-<p>Finally, at the leaf-level we compute for each box <span class="math notranslate nohighlight">\(\tau\)</span> the field values at the leaf particles <span class="math notranslate nohighlight">\(x_{i_\ell}\in B_{\tau}\)</span>. We have two contributions, namely from the local field <span class="math notranslate nohighlight">\(u_{\tau}^{local}\)</span> and from the fields at the leafs located by the particles in the neighbouring boxes. We denote the neighbours of <span class="math notranslate nohighlight">\(B_{\tau}\)</span> by <span class="math notranslate nohighlight">\(\mathcal{N}(\tau)\)</span>. Hence, the total field value is given as</p>
+<p>At the leaf-level we compute for each box <span class="math notranslate nohighlight">\(m\)</span> the field values at the leaf particles <span class="math notranslate nohighlight">\(x_{i_\ell^m}\in B_{m}\)</span>. We have three contributions, namely from the local field <span class="math notranslate nohighlight">\(u_{m}^{local}\)</span>, from the nearfield of <span class="math notranslate nohighlight">\(B_m\)</span> and from the other particles in <span class="math notranslate nohighlight">\(B_m\)</span> itself. We denote the neighbours of <span class="math notranslate nohighlight">\(B_{\tau}\)</span> by <span class="math notranslate nohighlight">\(\mathcal{N}(\tau)\)</span>. Hence, the total field value is given as</p>
 <div class="math notranslate nohighlight">
 \[
-u_{\tau}^{local}(x_{i_\ell}) = \left[(L2P)u_{\tau}^{local}\right](x_{i_\ell}) + \sum_{\tau'\in \mathcal{N}(\tau)}\sum_{i_\tau'}g(x_{i_{\ell}}, x_{i_\tau'}).
+u_{m}^{local}(x_{i_\ell^m}) = \left[(L2P)u_{m}^{local}\right](x_{i_\ell^m}) + \sum_{m'\in \mathcal{N}(m)}\sum_{\ell'}g(x_{i_{\ell}^m}, x_{i_{\ell'}^{m'}}) + \sum_{t}g(x_{i_{\ell}^m}, x_{i_{t}^m}).
 \]</div>
 <p>The <span class="math notranslate nohighlight">\(L2P\)</span> operator is usually a simple direct evaluation of fields from the representation given in a local basis.</p>
 </section>
@@ -477,17 +511,19 @@ add the contributions from the direct interactions with particles in neighbourin
 </section>
 <section id="complexity-of-the-fmm">
 <h2>Complexity of the FMM<a class="headerlink" href="#complexity-of-the-fmm" title="Permalink to this headline">#</a></h2>
-<p>We note that the total number of boxes in an octree/quadtree is <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
+<p>We note that the total number of boxes in an quadtree/octree is <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.
+We further assume that the complexity of the <span class="math notranslate nohighlight">\(M2M\)</span>, <span class="math notranslate nohighlight">\(M2L\)</span> and <span class="math notranslate nohighlight">\(L2L\)</span> operators do not depend
+on the number <span class="math notranslate nohighlight">\(N\)</span> of particles.</p>
 <p>In phase 1 in each leaf box we have to convert the fields generated by the source particles into exterior field expansions for each box. The cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span> since we have <span class="math notranslate nohighlight">\(N\)</span> particles.</p>
 <p>We then use <span class="math notranslate nohighlight">\(M2M\)</span> operators to pass the fields upwards. For each box in level <span class="math notranslate nohighlight">\(2\)</span> and above this is one translation operation, hence a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
 <p>In phase 2 we traverse the tree downwards from level 2 to the leafs. The number of boxes in the interaction list is constant, independent of <span class="math notranslate nohighlight">\(N\)</span>. Hence, again we have a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
 <p>Finally, at the leafs we compute the evaluation of the local fields at the particles and add in the direct neighbour contributions. Again, this is a cost of <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>.</p>
 <p>Hence, the full cost of the FMM is <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span>. The above estimate however only works if the cost of the translation operators is independent of <span class="math notranslate nohighlight">\(N\)</span>. Here, the low-rank expansions come into play.</p>
-<p>We recall that separable expansions of a given degree are the continuous equivalent of low-rank expansions. Analytic FMM methods use separable expansions into suitable basis functions of fixed degree <span class="math notranslate nohighlight">\(k\)</span> to represent the translation operators. This degree <span class="math notranslate nohighlight">\(k\)</span> is chosen independently of <span class="math notranslate nohighlight">\(N\)</span>. Algebraic FMM methods often use mixtures of interpolation/approximation and matrix low-rank techniques to compute translation operators with a fixed rank <span class="math notranslate nohighlight">\(k'\)</span> that is also independent of <span class="math notranslate nohighlight">\(N\)</span>.</p>
+<p>We recall that separable expansions of a given degree are the continuous equivalent of low-rank expansions. Analytic FMM methods use separable expansions into suitable basis functions of fixed degree <span class="math notranslate nohighlight">\(k\)</span> to represent the translation operators. This degree <span class="math notranslate nohighlight">\(k\)</span> is chosen independently of <span class="math notranslate nohighlight">\(N\)</span>. Algebraic FMM methods often use mixtures of interpolation/approximation and matrix low-rank techniques to compute translation operators with a fixed rank independent of <span class="math notranslate nohighlight">\(N\)</span>.</p>
 </section>
 <section id="types-of-fmm-implementations">
 <h2>Types of FMM implementations<a class="headerlink" href="#types-of-fmm-implementations" title="Permalink to this headline">#</a></h2>
-<p>We have so far described the general flow of every FMM realisation. The difference between implementations is in how the various translation operators are implemented.</p>
+<p>We have so far described the general flow of an FMM. The difference between FMM realisations is in how the various translation operators are implemented.</p>
 <p>Frequently used implementations include the following.</p>
 <ul class="simple">
 <li><p>The classical Greengard/Rohklin FMM based on spherical harmonics expansions. This is the classical FMM as originally described by Greengard and Rohklin. It is based on approximating fields by spherical harmonic expansions and the translation of these expansions between boxes.
