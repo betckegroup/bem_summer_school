@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>&lt;no title&gt; &#8212; BEM Summer School - Lecture Notes</title>
+    <title>Discretising boundary integral operators &#8212; BEM Summer School - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,6 +50,8 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Low rank compressibility" href="low_rank_compression.html" />
@@ -114,6 +116,18 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Practical BEM
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Discretising boundary integral operators
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
  <span class="caption-text">
   Fast direct solvers
  </span>
@@ -274,7 +288,29 @@ title="Print to PDF"
         <i class="fas fa-list"></i> Contents
     </div>
     <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="simple visible nav section-nav flex-column">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#integrating-weakly-singular-kernels-over-a-pair-of-triangles">
+   Integrating weakly singular kernels over a pair of triangles
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameterization-through-a-reference-triangle">
+     Parameterization through a reference triangle
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-adjacent-triangles">
+     Non-adjacent triangles
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adjacent-triangles">
+     Adjacent triangles
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
     </nav>
@@ -284,7 +320,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1><no title></h1>
+                <h1>Discretising boundary integral operators</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -293,7 +329,29 @@ title="Print to PDF"
                             <h2> Contents </h2>
                         </div>
                         <nav aria-label="Page">
-                            <ul class="simple visible nav section-nav flex-column">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#integrating-weakly-singular-kernels-over-a-pair-of-triangles">
+   Integrating weakly singular kernels over a pair of triangles
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameterization-through-a-reference-triangle">
+     Parameterization through a reference triangle
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#non-adjacent-triangles">
+     Non-adjacent triangles
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#adjacent-triangles">
+     Adjacent triangles
+    </a>
+   </li>
+  </ul>
+ </li>
 </ul>
 
                         </nav>
@@ -304,7 +362,95 @@ title="Print to PDF"
                 
               <div>
                 
-  
+  <section class="tex2jax_ignore mathjax_ignore" id="discretising-boundary-integral-operators">
+<h1>Discretising boundary integral operators<a class="headerlink" href="#discretising-boundary-integral-operators" title="Permalink to this headline">#</a></h1>
+<p>In this section we discuss the discretisation of boundary integral operators. We will start with a short discussion on numerical quadrature, then talk about linear solvers and finally go into details of computational aspects.</p>
+<p>We will focus on Galerkin discretisations of boundary integral operators of the form</p>
+<div class="math notranslate nohighlight">
+\[
+A_{ij} := \int_{\Gamma}\int_{\Gamma}g(x, y)\phi(y)\psi(x)ds(y)ds(x)
+\]</div>
+<p>for a closed surface <span class="math notranslate nohighlight">\(\Gamma\subset\mathbb{R}^3\)</span>. We assume that <span class="math notranslate nohighlight">\(\Gamma\)</span> has been discretised into a triangular surface mesh <span class="math notranslate nohighlight">\(\Gamma_h\)</span> formed of <span class="math notranslate nohighlight">\(N_h\)</span> flat triangles <span class="math notranslate nohighlight">\(\tau_j\subset\mathbb{R}^3\)</span>, <span class="math notranslate nohighlight">\(j=1,\dots N_h\)</span>. The parameter <span class="math notranslate nohighlight">\(h\)</span> is a size measure for the triangulation, e.g. the maximum diameter of the triangles.</p>
+<p>See below for the example of a triangulation of the unit sphere.</p>
+<p><img alt="hmatrix" src="_images/sphere.png" /></p>
+<section id="integrating-weakly-singular-kernels-over-a-pair-of-triangles">
+<h2>Integrating weakly singular kernels over a pair of triangles<a class="headerlink" href="#integrating-weakly-singular-kernels-over-a-pair-of-triangles" title="Permalink to this headline">#</a></h2>
+<p>Let <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> be two triangles. We want to evaluate the integral</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_{i, j} : = \int_{\tau_i}\int_{\tau_j}g(x, y)\phi(y)\psi(x)ds(y)ds(x).
+\]</div>
+<p>We need to distinguish two different cases, namely that the distance of <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> is larger zero and that the two triangles are adjacent (or even identical).</p>
+<p>Before we discuss the quadrature rules for these cases we want to introduce a parameterization by a reference triangle.</p>
+<section id="parameterization-through-a-reference-triangle">
+<h3>Parameterization through a reference triangle<a class="headerlink" href="#parameterization-through-a-reference-triangle" title="Permalink to this headline">#</a></h3>
+<p>Let the physical triangle by defined by the three vertices <span class="math notranslate nohighlight">\(v_0, v_1, v_2\in\mathbb{R}^3\)</span>.</p>
+<p>We introduce the reference triangle <span class="math notranslate nohighlight">\(\tau_R\subset\mathbb{R}^2\)</span> defined by the corner points <span class="math notranslate nohighlight">\((0, 0)\)</span>, <span class="math notranslate nohighlight">\((1, 0)\)</span>, <span class="math notranslate nohighlight">\((0, 1)\)</span>. Let <span class="math notranslate nohighlight">\(x\in\mathbb{R}^3\)</span> be our physical variable and <span class="math notranslate nohighlight">\(\tilde{x}\in\mathbb{R}^2\)</span> the corresponding variable in reference space.</p>
+<p>We introduce the reference map <span class="math notranslate nohighlight">\(x = v(\tilde{x})\)</span> defined by</p>
+<div class="math notranslate nohighlight">
+\[
+x = v_0 + J\tilde{x}
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(J:=\begin{bmatrix}v_1 - v_0 &amp; v_2 - v_0\end{bmatrix}\)</span> the Jacobian of the map.</p>
+<p>For a function <span class="math notranslate nohighlight">\(f\)</span> defined in physical space we have that <span class="math notranslate nohighlight">\(\tilde{f}(\tilde{x}) = f(v(\tilde{x}))\)</span> is the same function parameterized over reference space. We can also express the gradient <span class="math notranslate nohighlight">\(\nabla_x f\)</span> in physical space through the gradient in reference space. Applying the
+chain rule gives</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{f}'(\tilde{x}) = f'(v(\tilde{x}))v'(\tilde{x}).
+\]</div>
+<p>Transposing gives
+$<span class="math notranslate nohighlight">\(
+\nabla_{\tilde{x}}f(\tilde{x}) = J^T\nabla_x f(x).
+\)</span>$</p>
+<p>To obtain an expression for <span class="math notranslate nohighlight">\(\nabla_x f(x)\)</span> we need to use a little bit of linear algebra.
+Let <span class="math notranslate nohighlight">\(J = U\Sigma V^T\)</span> be the Singular Value Decomposition of <span class="math notranslate nohighlight">\(J\)</span> with <span class="math notranslate nohighlight">\(U\in\mathbb{R}^{3\times 3}\)</span>, <span class="math notranslate nohighlight">\(V\in\mathbb{R}^{2\times 2}\)</span>, <span class="math notranslate nohighlight">\(\Sigma\in\mathbb{R}{3\times 2}\)</span>. <span class="math notranslate nohighlight">\(U\)</span> and <span class="math notranslate nohighlight">\(V\)</span> are orthogonal, that is <span class="math notranslate nohighlight">\(U^TU = I\)</span> and <span class="math notranslate nohighlight">\(V^TV = I\)</span>. The matrix <span class="math notranslate nohighlight">\(\Sigma\)</span> is diagonal with diagonal values <span class="math notranslate nohighlight">\(\sigma_1\geq\sigma_2 \geq 0\)</span>. The first two columns of <span class="math notranslate nohighlight">\(U\)</span> form the range of <span class="math notranslate nohighlight">\(J\)</span>.</p>
+<p>We define the pseudo-inverse of <span class="math notranslate nohighlight">\(J^T\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
+\left[J^T\right]^{\dagger} := J(J^TJ)^{-1} = U\Sigma(\Sigma^T\Sigma)^{-1} V^T.
+\]</div>
+<p>Applying the pseudo-inverse gives</p>
+<div class="math notranslate nohighlight">
+\[
+\left[J^T\right]^{\dagger}\nabla_{\tilde{x}}f(\tilde{x}) = \left[J^T\right]^{\dagger}J^T\nabla_x f(x).
+\]</div>
+<p>With a bit of matrix multiplication we obtain that</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[J^T\right]^{\dagger}J^T = U\begin{bmatrix}I_2 &amp; 0\\0 &amp; 0\end{bmatrix}U^T
+\end{split}\]</div>
+<p>with <span class="math notranslate nohighlight">\(I_2\)</span> being the <span class="math notranslate nohighlight">\(2\times 2\)</span> identity matrix. We see that <span class="math notranslate nohighlight">\(\left[J^T\right]^{\dagger}J^T\)</span>
+projects onto the range of <span class="math notranslate nohighlight">\(J\)</span>, which are all vectors tangential to the physical triangle. Any component orthogonal to those tangents is projected out. Hence, the expression
+<span class="math notranslate nohighlight">\(\left[J^T\right]^{\dagger}\nabla_{\tilde{x}}f(\tilde{x})\)</span> gives us the tangential derivative
+in physical space. This is intuitively clear since we parameterize on the surface of the reference triangle. So we cannot represent derivative information orthogonal to it.</p>
+<p>We now parameterize the integral <span class="math notranslate nohighlight">\(\mu_{i, j}\)</span> through the reference element as</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_{i, j} = \int_{\tau_{R}}\int_{\tau_R}g(v_i(\tilde{x}), v_j(\tilde{y}))\phi(v_j(\tilde{y}))\psi(v_i(\tilde{x}))\omega_i\omega_j d\tilde{y}d\tilde{x}.
+\]</div>
+<p>The functions <span class="math notranslate nohighlight">\(v_i\)</span> and <span class="math notranslate nohighlight">\(v_j\)</span> are the maps from the reference element to the triangles <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span>. The factors <span class="math notranslate nohighlight">\(\omega_i\)</span> and <span class="math notranslate nohighlight">\(\omega_j\)</span> are the integration elements given by <span class="math notranslate nohighlight">\(\omega = \|j_1\times j_2\|_2\)</span>, where <span class="math notranslate nohighlight">\(j_1\)</span> and <span class="math notranslate nohighlight">\(j_2\)</span> are the columns of the Jacobian <span class="math notranslate nohighlight">\(J\)</span>.</p>
+</section>
+<section id="non-adjacent-triangles">
+<h3>Non-adjacent triangles<a class="headerlink" href="#non-adjacent-triangles" title="Permalink to this headline">#</a></h3>
+<p>We now need to evaluate the integral over the reference triangles. The straight forward case occurs when the triangles <span class="math notranslate nohighlight">\(\tau_i\)</span> and <span class="math notranslate nohighlight">\(\tau_j\)</span> are non-adjacent. Then the kernel function <span class="math notranslate nohighlight">\(g\)</span> is smooth throughout the domain of integration and we can use any quadrature rule for smooth integrals. Popular quadrature rules are for example the symmetric Gauss triangle rules.</p>
+<p>Let a quadrature rule over the reference triangle be defined by the quadrature points <span class="math notranslate nohighlight">\(\tilde{q}_\ell\in\tau_R\)</span> and associated quadrature weights <span class="math notranslate nohighlight">\(\beta_{\ell}\)</span>. We have</p>
+<div class="math notranslate nohighlight">
+\[
+\mu_{i, j}\approx \sum_{\ell_i}\sum_{\ell_j}g(v_i(\tilde{q}_{\ell_i}), v_j(\tilde{q}_{\ell_j}))\phi(v_j(\tilde{q}_{\ell_j}))\psi(v_i(\tilde{q}_{\ell_i}))\omega_i\omega_j \alpha_j\alpha_i.
+\]</div>
+</section>
+<section id="adjacent-triangles">
+<h3>Adjacent triangles<a class="headerlink" href="#adjacent-triangles" title="Permalink to this headline">#</a></h3>
+<p>The more difficult case occurs if triangles are either vertex adjacent, edge adjacent or identical.</p>
+<p><img alt="hmatrix" src="_images/triangles.png" /></p>
+<p>In these cases we integrate over the singularities of the kernel function. There are a number of techniques to solve this problem and we will not go into technical details here.</p>
+<p>A popular choice is the fully numerical quadrature rule by Erichsen and Sauter. It uses different types of quadrature point distribution depending on whether we are in the vertex, edge, or identical case.</p>
+<p>The advantage of this rule is that it is fully independent of the kernel, can be used on higher-order elements, arbitrary types of basis functions and the implementation can make use of modern CPU vectorization techniques. However, the number of quadrature points required is rather high. But since the number of singular integration pairs only scales linearly with the overall number of triangles this is not of much concern.</p>
+<p>An alternative are semi-analytical quadrature rules. There are different families of these rules for different types of problems. They partially integrate the integral analytically and combine with a numerical rule for a remaining kernel that is less singular. They are very efficient. However, the implementation requires the use of special functions, which can be computationally inefficient on modern vectorized CPU architectures.</p>
+</section>
+</section>
+</section>
+
     <script type="text/x-thebe-config">
     {
         requestKernel: true,
