@@ -1,6 +1,9 @@
 format: jb-book
 root: intro
 parts:
+- caption: Practical BEM
+  chapters:
+  - file: discretisation.ipynb
 - caption: Fast direct solvers
   chapters:
   - file: low_rank_compression.ipynb
