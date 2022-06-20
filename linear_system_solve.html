@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Solving the linear system &#8212; BEM Summer School - Lecture Notes</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=62ba249389abaaa9ffc34bf36a076bdc1d65ee18" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=f31d14ad54b65d19161ba51d4ffff3a77ae00456"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Low rank compressibility" href="low_rank_compression.html" />
+    <link rel="prev" title="Discretising boundary integral operators" href="discretisation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">BEM Summer School - Lecture Notes</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    BEM Summer School Lecture Notes
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Practical BEM
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="discretisation.html">
+   Discretising boundary integral operators
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Solving the linear system
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Fast direct solvers
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="low_rank_compression.html">
+   Low rank compressibility
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="partitioning.html">
+   Tree partitioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="hmatrices.html">
+   Hierarchical (
+   <span class="math notranslate nohighlight">
+    \(\mathcal{H}\)
+   </span>
+   -)Matrices
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="fmm.html">
+   Fast Multipole Methods
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/linear_system_solve.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/linear_system_solve.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-test-problems">
+   Setting up the test problems
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#direct-solution-via-lu-decomposition">
+   Direct solution via LU decomposition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#iterative-solvers">
+   Iterative solvers
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Solving the linear system</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#setting-up-the-test-problems">
+   Setting up the test problems
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#direct-solution-via-lu-decomposition">
+   Direct solution via LU decomposition
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#iterative-solvers">
+   Iterative solvers
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="solving-the-linear-system">
+<h1>Solving the linear system<a class="headerlink" href="#solving-the-linear-system" title="Permalink to this headline">#</a></h1>
+<p>After discretising the integral operator we need to solve the resulting linear sytem of equations. Depending on the size of the system we can use either a direct LU decomposition or use an iterative solver. In the following we will give a few remarks to both types of solvers.</p>
+<p>As canonical examples we will consider the following two problems.</p>
+<ul class="simple">
+<li><p>Solution of the single-layer boundary integral equation discretised as <span class="math notranslate nohighlight">\(A_Vx = b\)</span>
+with</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+[A_V][i, j] = \int_{\tau_i}\int_{\tau_j}g(x, y)ds(y)ds(x).
+\]</div>
+<ul class="simple">
+<li><p>Solution of the double-layer boundary integral equation discretised as <span class="math notranslate nohighlight">\(A_Kx = b\)</span>
+with</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[
+[A_K][i, j] = \frac{1}{2}\int_{\tau_i\cap\tau_j}1ds(x)ds(y) + \int_{\tau_i}\int_{\tau_j}\frac{\partial g(x, y)}{\partial n(y)}ds(y)ds(x)
+\]</div>
+<p>In both cases the trial and test spaces are simply the spaces of piecewise constant functions on each triangle.</p>
+<section id="setting-up-the-test-problems">
+<h2>Setting up the test problems<a class="headerlink" href="#setting-up-the-test-problems" title="Permalink to this headline">#</a></h2>
+<p>We first setup the test problems. We will setup a larger problem for testing iterative solvers and a smaller problem
+to approximate the eigenvalues and draw them. This ensures that the notebook still runs in reasonable time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bempp.api</span>
+
+<span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">enable_console_logging</span><span class="p">()</span>
+<span class="n">grid_large</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">regular_sphere</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">space_large</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">function_space</span><span class="p">(</span><span class="n">grid_large</span><span class="p">,</span> <span class="s2">&quot;DP&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ident_large</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">)</span>
+<span class="n">op_v_large</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">laplace</span><span class="o">.</span><span class="n">single_layer</span><span class="p">(</span><span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">)</span>
+<span class="n">op_k_large</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">ident_large</span> <span class="o">-</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">laplace</span><span class="o">.</span><span class="n">double_layer</span><span class="p">(</span><span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">,</span> <span class="n">space_large</span><span class="p">)</span>
+
+<span class="n">A_v_large</span> <span class="o">=</span> <span class="n">op_v_large</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+<span class="n">A_k_large</span> <span class="o">=</span> <span class="n">op_k_large</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+<span class="n">M_large</span> <span class="o">=</span> <span class="n">ident_large</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+
+<span class="n">grid_small</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">regular_sphere</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">space_small</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">function_space</span><span class="p">(</span><span class="n">grid_small</span><span class="p">,</span> <span class="s2">&quot;DP&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">ident_small</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">)</span>
+<span class="n">op_v_small</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">laplace</span><span class="o">.</span><span class="n">single_layer</span><span class="p">(</span><span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">)</span>
+<span class="n">op_k_small</span> <span class="o">=</span> <span class="mf">.5</span> <span class="o">*</span> <span class="n">ident_small</span> <span class="o">-</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">laplace</span><span class="o">.</span><span class="n">double_layer</span><span class="p">(</span><span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">,</span> <span class="n">space_small</span><span class="p">)</span>
+
+<span class="n">A_v_small</span> <span class="o">=</span> <span class="n">op_v_small</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+<span class="n">A_k_small</span> <span class="o">=</span> <span class="n">op_k_small</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+<span class="n">M_small</span> <span class="o">=</span> <span class="n">ident_small</span><span class="o">.</span><span class="n">weak_form</span><span class="p">()</span><span class="o">.</span><span class="n">A</span>
+
+
+
+<span class="n">fun_large</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">GridFunction</span><span class="o">.</span><span class="n">from_random</span><span class="p">(</span><span class="n">space_large</span><span class="p">)</span>
+<span class="n">b_large</span> <span class="o">=</span> <span class="n">fun_large</span><span class="o">.</span><span class="n">projections</span><span class="p">()</span>
+
+<span class="n">fun_small</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">GridFunction</span><span class="o">.</span><span class="n">from_random</span><span class="p">(</span><span class="n">space_small</span><span class="p">)</span>
+<span class="n">b_small</span> <span class="o">=</span> <span class="n">fun_small</span><span class="o">.</span><span class="n">projections</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bempp:HOST:INFO: Created grid with id b7d63faa-44eb-495b-ae73-b7b82f290166. Elements: 32768. Edges: 49152. Vertices: 16386
+bempp:HOST:INFO: OpenCL CPU Device set to: AMD Ryzen Threadripper 3970X 32-Core Processor 
+/home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/pyopencl/__init__.py:274: CompilerWarning: Non-empty compiler output encountered. Set the environment variable PYOPENCL_COMPILER_OUTPUT=1 to see more.
+  warn(&quot;Non-empty compiler output encountered. Set the &quot;
+/home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/pyopencl/__init__.py:274: CompilerWarning: Non-empty compiler output encountered. Set the environment variable PYOPENCL_COMPILER_OUTPUT=1 to see more.
+  warn(&quot;Non-empty compiler output encountered. Set the &quot;
+bempp:HOST:INFO: Created grid with id 52a182f6-1dda-4090-852e-36629c3aa3cc. Elements: 512. Edges: 768. Vertices: 258
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="direct-solution-via-lu-decomposition">
+<h2>Direct solution via LU decomposition<a class="headerlink" href="#direct-solution-via-lu-decomposition" title="Permalink to this headline">#</a></h2>
+<p>The easiest way to solve the discrete problem is via LU decomposition. Moreover, it is very efficient if we want to solve problems with many right-hand sides. The disadvantage though is that the cost of a dense LU decomposition scales like <span class="math notranslate nohighlight">\(\mathcal{O}(n^3)\)</span> with <span class="math notranslate nohighlight">\(n\)</span> the dimension of the discrete problem.</p>
+<p>In Python we can simply use the Numpy dense solver, which uses LAPACK for solving linear systems of equations.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">xvlu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A_v_small</span><span class="p">,</span> <span class="n">b_small</span><span class="p">)</span>
+<span class="n">xklu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A_k_small</span><span class="p">,</span> <span class="n">b_small</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have used here the small mesh. The larger mesh with <span class="math notranslate nohighlight">\(32k\)</span> elements would already be too large for some standard desktop computers to handle in reasonable time.</p>
+</section>
+<section id="iterative-solvers">
+<h2>Iterative solvers<a class="headerlink" href="#iterative-solvers" title="Permalink to this headline">#</a></h2>
+<p>Discrete boundary integral equations are mostly solved by iterative solvers. Typical solvers are CG (Conjugate Gradients) for symmetric positive definite systems (e.g. the Laplace single-layer operator), and GMRES (Generalized minimal residual) for nonsymmetric problems. The convergence of iterative solvers strongly depends on the distribution of the eigenvalues of the matrices. Without going into the theory, the eigenvalues should be clustered and away from zero to guarantee fast convergence. Let’s plot the eigenvalues of <span class="math notranslate nohighlight">\(M^{-1}A_V\)</span> and <span class="math notranslate nohighlight">\(M^{-1}A_K\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> is the discrete representation of the identity matrix. The matrix <span class="math notranslate nohighlight">\(M\)</span> ensures that the scaling is correct so that we approximate the eigenvalues of the actual operators.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">eigvals</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span>
+
+<span class="n">eigv</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A_v_small</span><span class="p">,</span> <span class="n">M_small</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+<span class="n">eigk</span> <span class="o">=</span> <span class="n">eigvals</span><span class="p">(</span><span class="n">A_k_small</span><span class="p">,</span> <span class="n">M_small</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigv</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigv</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">real</span><span class="p">(</span><span class="n">eigk</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">imag</span><span class="p">(</span><span class="n">eigk</span><span class="p">),</span> <span class="s1">&#39;rx&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Single-Layer&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Double-Layer&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Double-Layer&#39;)
+</pre></div>
+</div>
+<img alt="_images/linear_system_solve_11_1.png" src="_images/linear_system_solve_11_1.png" />
+</div>
+</div>
+<p>We see that in the single-layer operator has eigenvalues clustered around zero and the double-layer operator has eigenvalues clustered around <span class="math notranslate nohighlight">\(0.5\)</span>. This means that the convergence for the double-layer operator will be much better with iterative solvers. Let’s try this out.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">it_count</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">gmres</span><span class="p">(</span><span class="n">op_v_large</span><span class="p">,</span> <span class="n">fun_large</span><span class="p">,</span> <span class="n">use_strong_form</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/scipy/sparse/linalg/dsolve/linsolve.py:318: SparseEfficiencyWarning: splu requires CSC matrix format
+  warn(&#39;splu requires CSC matrix format&#39;, SparseEfficiencyWarning)
+bempp:HOST:INFO: Starting GMRES iteration
+bempp:HOST:INFO: GMRES Iteration 1 with residual 0.865283501884796
+bempp:HOST:INFO: GMRES Iteration 2 with residual 0.8182754182410917
+bempp:HOST:INFO: GMRES Iteration 3 with residual 0.7467522252749375
+bempp:HOST:INFO: GMRES Iteration 4 with residual 0.6467895423392332
+bempp:HOST:INFO: GMRES Iteration 5 with residual 0.5683857802724265
+bempp:HOST:INFO: GMRES Iteration 6 with residual 0.480094711067124
+bempp:HOST:INFO: GMRES Iteration 7 with residual 0.40197442634058256
+bempp:HOST:INFO: GMRES Iteration 8 with residual 0.3355360278457393
+bempp:HOST:INFO: GMRES Iteration 9 with residual 0.2760903033647621
+bempp:HOST:INFO: GMRES Iteration 10 with residual 0.22383306750687634
+bempp:HOST:INFO: GMRES Iteration 11 with residual 0.177266733575374
+bempp:HOST:INFO: GMRES Iteration 12 with residual 0.1421361853041288
+bempp:HOST:INFO: GMRES Iteration 13 with residual 0.12921631949619952
+bempp:HOST:INFO: GMRES Iteration 14 with residual 0.10484278264851037
+bempp:HOST:INFO: GMRES Iteration 15 with residual 0.08327648739292136
+bempp:HOST:INFO: GMRES Iteration 16 with residual 0.06666230733262997
+bempp:HOST:INFO: GMRES Iteration 17 with residual 0.05974066079321031
+bempp:HOST:INFO: GMRES Iteration 18 with residual 0.055345335744355725
+bempp:HOST:INFO: GMRES Iteration 19 with residual 0.04669369372767945
+bempp:HOST:INFO: GMRES Iteration 20 with residual 0.03672601466298451
+bempp:HOST:INFO: GMRES Iteration 21 with residual 0.03304331200873078
+bempp:HOST:INFO: GMRES Iteration 22 with residual 0.032317932371302475
+bempp:HOST:INFO: GMRES Iteration 23 with residual 0.030245034220260054
+bempp:HOST:INFO: GMRES Iteration 24 with residual 0.028608117030848635
+bempp:HOST:INFO: GMRES Iteration 25 with residual 0.025420076181090653
+bempp:HOST:INFO: GMRES Iteration 26 with residual 0.023647507008733686
+bempp:HOST:INFO: GMRES Iteration 27 with residual 0.020025023436450507
+bempp:HOST:INFO: GMRES Iteration 28 with residual 0.01803096115813286
+bempp:HOST:INFO: GMRES Iteration 29 with residual 0.014746136515314203
+bempp:HOST:INFO: GMRES Iteration 30 with residual 0.012307936815209608
+bempp:HOST:INFO: GMRES Iteration 31 with residual 0.010128869502627147
+bempp:HOST:INFO: GMRES Iteration 32 with residual 0.008306262839755616
+bempp:HOST:INFO: GMRES Iteration 33 with residual 0.006995215596899741
+bempp:HOST:INFO: GMRES Iteration 34 with residual 0.006316697579351628
+bempp:HOST:INFO: GMRES Iteration 35 with residual 0.005124900994428298
+bempp:HOST:INFO: GMRES Iteration 36 with residual 0.0041084685626884485
+bempp:HOST:INFO: GMRES Iteration 37 with residual 0.0035810099036750055
+bempp:HOST:INFO: GMRES Iteration 38 with residual 0.003099591470697038
+bempp:HOST:INFO: GMRES Iteration 39 with residual 0.0028613523692889234
+bempp:HOST:INFO: GMRES Iteration 40 with residual 0.0023670735782809036
+bempp:HOST:INFO: GMRES Iteration 41 with residual 0.0022459716857122056
+bempp:HOST:INFO: GMRES Iteration 42 with residual 0.002145646424940707
+bempp:HOST:INFO: GMRES Iteration 43 with residual 0.0019848425851774084
+bempp:HOST:INFO: GMRES Iteration 44 with residual 0.0018422368991018285
+bempp:HOST:INFO: GMRES Iteration 45 with residual 0.00161273616305907
+bempp:HOST:INFO: GMRES Iteration 46 with residual 0.0014501502892209932
+bempp:HOST:INFO: GMRES Iteration 47 with residual 0.0013046996313118943
+bempp:HOST:INFO: GMRES Iteration 48 with residual 0.001134268778737116
+bempp:HOST:INFO: GMRES Iteration 49 with residual 0.0009545356681886175
+bempp:HOST:INFO: GMRES Iteration 50 with residual 0.0007984045467834078
+bempp:HOST:INFO: GMRES Iteration 51 with residual 0.0006680503550660573
+bempp:HOST:INFO: GMRES Iteration 52 with residual 0.0005577479466404359
+bempp:HOST:INFO: GMRES Iteration 53 with residual 0.00048579533956282276
+bempp:HOST:INFO: GMRES Iteration 54 with residual 0.0004403856261693189
+bempp:HOST:INFO: GMRES Iteration 55 with residual 0.00037476782737975393
+bempp:HOST:INFO: GMRES Iteration 56 with residual 0.0003204926173260658
+bempp:HOST:INFO: GMRES Iteration 57 with residual 0.0002876315490864872
+bempp:HOST:INFO: GMRES Iteration 58 with residual 0.0002638403412043602
+bempp:HOST:INFO: GMRES Iteration 59 with residual 0.00023050619745856928
+bempp:HOST:INFO: GMRES Iteration 60 with residual 0.00019950885952884896
+bempp:HOST:INFO: GMRES Iteration 61 with residual 0.00019422643970799151
+bempp:HOST:INFO: GMRES Iteration 62 with residual 0.00018083929761913425
+bempp:HOST:INFO: GMRES Iteration 63 with residual 0.0001640341321126325
+bempp:HOST:INFO: GMRES Iteration 64 with residual 0.00015315028180293367
+bempp:HOST:INFO: GMRES Iteration 65 with residual 0.00014307369873905584
+bempp:HOST:INFO: GMRES Iteration 66 with residual 0.00012360816573638963
+bempp:HOST:INFO: GMRES Iteration 67 with residual 0.00010990949847125591
+bempp:HOST:INFO: GMRES Iteration 68 with residual 9.454792228194357e-05
+bempp:HOST:INFO: GMRES Iteration 69 with residual 7.84827568794843e-05
+bempp:HOST:INFO: GMRES Iteration 70 with residual 6.841998649505815e-05
+bempp:HOST:INFO: GMRES Iteration 71 with residual 5.684938683471638e-05
+bempp:HOST:INFO: GMRES Iteration 72 with residual 4.670970060016766e-05
+bempp:HOST:INFO: GMRES Iteration 73 with residual 4.29489037519109e-05
+bempp:HOST:INFO: GMRES Iteration 74 with residual 3.7026670618232604e-05
+bempp:HOST:INFO: GMRES Iteration 75 with residual 3.119736783017419e-05
+bempp:HOST:INFO: GMRES Iteration 76 with residual 2.7746200677685374e-05
+bempp:HOST:INFO: GMRES Iteration 77 with residual 2.4507508331253024e-05
+bempp:HOST:INFO: GMRES Iteration 78 with residual 2.2882110485214235e-05
+bempp:HOST:INFO: GMRES Iteration 79 with residual 2.0428073124847054e-05
+bempp:HOST:INFO: GMRES Iteration 80 with residual 1.831068156768704e-05
+bempp:HOST:INFO: GMRES Iteration 81 with residual 1.744350157012266e-05
+bempp:HOST:INFO: GMRES Iteration 82 with residual 1.6579648668031678e-05
+bempp:HOST:INFO: GMRES Iteration 83 with residual 1.549458447894526e-05
+bempp:HOST:INFO: GMRES Iteration 84 with residual 1.4312351547142651e-05
+bempp:HOST:INFO: GMRES Iteration 85 with residual 1.3221188154536586e-05
+bempp:HOST:INFO: GMRES Iteration 86 with residual 1.169564552366975e-05
+bempp:HOST:INFO: GMRES Iteration 87 with residual 1.0355408245352669e-05
+bempp:HOST:INFO: GMRES Iteration 88 with residual 9.171565555026207e-06
+bempp:HOST:INFO: GMRES finished in 88 iterations and took 1.60E+01 sec.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">it_count</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;iteration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;residual&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Convergence for the single-layer operator.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Convergence for the single-layer operator.&#39;)
+</pre></div>
+</div>
+<img alt="_images/linear_system_solve_14_1.png" src="_images/linear_system_solve_14_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">it_count</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">gmres</span><span class="p">(</span><span class="n">op_k_large</span><span class="p">,</span> <span class="n">fun_large</span><span class="p">,</span> <span class="n">use_strong_form</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_residuals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">it_count</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;iteration&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;residual&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Convergence for the double-layer operator.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bempp:HOST:INFO: Starting GMRES iteration
+bempp:HOST:INFO: GMRES Iteration 1 with residual 0.008454857100700427
+bempp:HOST:INFO: GMRES Iteration 2 with residual 0.0018043362094335256
+bempp:HOST:INFO: GMRES Iteration 3 with residual 0.00031478780918214736
+bempp:HOST:INFO: GMRES Iteration 4 with residual 2.7240750636403492e-05
+bempp:HOST:INFO: GMRES Iteration 5 with residual 1.5957049272245287e-06
+bempp:HOST:INFO: GMRES finished in 5 iterations and took 1.19E+00 sec.
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Convergence for the double-layer operator.&#39;)
+</pre></div>
+</div>
+<img alt="_images/linear_system_solve_15_2.png" src="_images/linear_system_solve_15_2.png" />
+</div>
+</div>
+<p>In the above two examples one notices the parameter <code class="docutils literal notranslate"><span class="pre">use_strong_form=True</span></code>. This is the Bempp notation for using mass matrix preconditioning. This means that instead of the system <span class="math notranslate nohighlight">\(Ax=b\)</span>. We solve the system <span class="math notranslate nohighlight">\(M^{-1}Ax = M^{-1}b\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> is the discretisation of the identity matrix. This is a rescaling that removes ill-conditioning due to the size of the elements.</p>
+<p>More generally, preconditioners are matrices <span class="math notranslate nohighlight">\(P\)</span>, such that iterative solvers for <span class="math notranslate nohighlight">\(P^{-1}Ax = P^{-1}b\)</span> converge faster to the correct solution than just iterative solvers applied to the equation <span class="math notranslate nohighlight">\(Ax=b\)</span>.</p>
+<p>While the double-layer operator converges in just a few iterations the single-layer operator takes much longer. This is due to its eigenvalues being clustered around zero. Integral equations with <span class="math notranslate nohighlight">\(\frac{1}{2}I+K\)</span> are also called Fredholm integral equations of the second kind while equations with the operator <span class="math notranslate nohighlight">\(V\)</span> on the left-hand side are called Fredholm integral operators of the first kind.</p>
+<p>For second kind integral equations mass matrix preconditioning is sufficient. For first kind integral equations we often want more sophisticated operator preconditioners such that <span class="math notranslate nohighlight">\(P^{-1}A\)</span> has eigenvalues clustered away from zero.</p>
+<p>We note that we could have used CG as iterative solver for the single-layer operator <span class="math notranslate nohighlight">\(V\)</span>. The reason is that internally Bempp ignores that <span class="math notranslate nohighlight">\(M^{-1}A_K\)</span> could be solved as a preconditioned positive definite system and treats it as un unsymmetric system. By extracting the matrices and using an external routine one could circumvent this.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="discretisation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Discretising boundary integral operators</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="low_rank_compression.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Low rank compressibility</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Timo Betcke<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
