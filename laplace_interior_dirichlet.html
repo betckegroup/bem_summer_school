@@ -397,19 +397,24 @@ title="Print to PDF"
 <section id="background">
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">#</a></h2>
 <p>In this tutorial, we will solve a simple Laplace problem inside the unit sphere with Dirichlet boundary conditions. Let <span class="math notranslate nohighlight">\(\Omega\)</span> be the unit sphere with boundary <span class="math notranslate nohighlight">\(\Gamma\)</span>. Let <span class="math notranslate nohighlight">\(\nu\)</span> be the outward pointing normal on <span class="math notranslate nohighlight">\(\Gamma\)</span>. The PDE and boundary conditions are given by</p>
-<p>\begin{align}
-\Delta u &amp;= 0&amp;&amp;\text{in }\Omega,\
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+\Delta u &amp;= 0&amp;&amp;\text{in }\Omega,\\
 u &amp;= f&amp;&amp;\text{on }\Gamma.
-\end{align}</p>
-<p>The boundary data is a source <span class="math notranslate nohighlight">\(\hat{u}\)</span> located at the point <span class="math notranslate nohighlight">\((0.9,0,0)\)</span>.
-$<span class="math notranslate nohighlight">\(
+\end{aligned}
+\end{split}\]</div>
+<p>The boundary data is a source <span class="math notranslate nohighlight">\(\hat{u}\)</span> located at the point <span class="math notranslate nohighlight">\((0.9,0,0)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[
 \hat{u}(\mathbf x)=\frac{1}{4\pi\sqrt{(x-0.9)^2+y^2+z^2}}.
-\)</span>$</p>
-<p>For this example, we will use a direct integral equation of the first kind. Let
-$<span class="math notranslate nohighlight">\(
+\]</div>
+<p>For this example, we will use a direct integral equation of the first kind. Let</p>
+<div class="math notranslate nohighlight">
+\[
 g(\mathbf x,\mathbf y) = \frac{1}{4\pi |\mathbf x-\mathbf y|}
-\)</span><span class="math notranslate nohighlight">\(
-be the Green's function for Laplace in three dimensions. From Green's representation theorem, it follows that every harmonic function \)</span>u<span class="math notranslate nohighlight">\( in \)</span>\Omega$ satisfies</p>
+\]</div>
+<p>be the Green’s function for Laplace in three dimensions. From Green’s representation theorem, it follows that every harmonic function <span class="math notranslate nohighlight">\(u\)</span> in <span class="math notranslate nohighlight">\(\Omega\)</span> satisfies</p>
 <div class="math notranslate nohighlight">
 \[
 u(\mathbf x) = \int_{\Gamma} g(\mathbf x,\mathbf y)\frac{\partial u(\mathbf y)}{\partial \nu(\mathbf{y})}\mathrm{d}\mathbf y-\int_{\Gamma}\frac{\partial g(\mathbf x,\mathbf y)}{\partial \nu(\mathbf{y})}u(\mathbf y)\mathrm{d}\mathbf y,~\mathbf x\in\Omega\setminus\Gamma

@@ -396,32 +396,37 @@ title="Print to PDF"
 <h1>Computing the capacity of a cube with a re-entrant corner<a class="headerlink" href="#computing-the-capacity-of-a-cube-with-a-re-entrant-corner" title="Permalink to this headline">#</a></h1>
 <section id="background">
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">#</a></h2>
-<p>The capacity <span class="math notranslate nohighlight">\(\text{cap}(\Omega)\)</span> of an isolated conductor <span class="math notranslate nohighlight">\(\Omega\subset\mathbb{R}^3\)</span> with boundary <span class="math notranslate nohighlight">\(\Gamma\)</span> measures its ability to store charges. It is defined as the ratio of the total surface equilibrium charge relative to its surface potential value. To compute the capacity, we need to solve the following exterior Laplace problem for the equilibrium potential <span class="math notranslate nohighlight">\(u\)</span> with unit surface value:
-$<span class="math notranslate nohighlight">\(
+<p>The capacity <span class="math notranslate nohighlight">\(\text{cap}(\Omega)\)</span> of an isolated conductor <span class="math notranslate nohighlight">\(\Omega\subset\mathbb{R}^3\)</span> with boundary <span class="math notranslate nohighlight">\(\Gamma\)</span> measures its ability to store charges. It is defined as the ratio of the total surface equilibrium charge relative to its surface potential value. To compute the capacity, we need to solve the following exterior Laplace problem for the equilibrium potential <span class="math notranslate nohighlight">\(u\)</span> with unit surface value:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
 \begin{align}
 -\Delta u &amp;= 0\quad\text{in }\Omega^\text{+},\\
 u &amp;= 1\quad\text{on }\Gamma,\\
 |u(\mathbf{x})| &amp;=\mathcal{O}\left(|\mathbf{x}|^{-1}\right)\quad\text{as }|\mathbf{x}|\rightarrow\infty.
 \end{align}
-\)</span><span class="math notranslate nohighlight">\(
-Here \)</span>\Omega^\text{+}<span class="math notranslate nohighlight">\( is the domain exterior to \)</span>\Omega<span class="math notranslate nohighlight">\(.
-The total surface charge of an isolated conductor is given by Gauss law as
-\)</span><span class="math notranslate nohighlight">\(
+\end{split}\]</div>
+<p>Here <span class="math notranslate nohighlight">\(\Omega^\text{+}\)</span> is the domain exterior to <span class="math notranslate nohighlight">\(\Omega\)</span>.
+The total surface charge of an isolated conductor is given by Gauss law as</p>
+<div class="math notranslate nohighlight">
+\[
 \text{cap}(\Omega)=-\epsilon_0\int_{\Gamma}\frac{\partial u}{\partial\nu}(\mathbf{x})\,\mathrm{d}\mathbf{x}.
-\)</span><span class="math notranslate nohighlight">\(
-\)</span>\nu(\mathbf{x})<span class="math notranslate nohighlight">\( is the outward pointing normal direction for \)</span>\mathbf{x}\in\Gamma<span class="math notranslate nohighlight">\(, and \)</span>\epsilon_0<span class="math notranslate nohighlight">\( is the electric constant with value \)</span>\epsilon_0\approx 8.854\times 10^{-12},{\rm F/m}<span class="math notranslate nohighlight">\(. In the following we will use the normalized capacity \)</span>\text{cap}^*(\Omega)=-\frac{1}{4\pi}\int_{\Gamma}\frac{\partial u}{\partial\nu},d\mathbf{x}<span class="math notranslate nohighlight">\(. The normalized capacity has the value \)</span>1$ for the unit sphere.</p>
-<p>Using Green’s representation theorem and noting that the exterior Laplace double layer potential is zero for constant densities, we can represent the solution <span class="math notranslate nohighlight">\(u\)</span> as
-$<span class="math notranslate nohighlight">\(
+\]</div>
+<p><span class="math notranslate nohighlight">\(\nu(\mathbf{x})\)</span> is the outward pointing normal direction for <span class="math notranslate nohighlight">\(\mathbf{x}\in\Gamma\)</span>, and <span class="math notranslate nohighlight">\(\epsilon_0\)</span> is the electric constant with value <span class="math notranslate nohighlight">\(\epsilon_0\approx 8.854\times 10^{-12}\,{\rm F/m}\)</span>. In the following we will use the normalized capacity <span class="math notranslate nohighlight">\(\text{cap}^*(\Omega)=-\frac{1}{4\pi}\int_{\Gamma}\frac{\partial u}{\partial\nu}\,d\mathbf{x}\)</span>. The normalized capacity has the value <span class="math notranslate nohighlight">\(1\)</span> for the unit sphere.</p>
+<p>Using Green’s representation theorem and noting that the exterior Laplace double layer potential is zero for constant densities, we can represent the solution <span class="math notranslate nohighlight">\(u\)</span> as</p>
+<div class="math notranslate nohighlight">
+\[
 u(\mathbf{x}) = -\int_{\Gamma} g(\mathbf{x},\mathbf{y})\phi(\mathbf{y})\,\mathrm{d}\mathbf{y} \quad\text{for all }\mathbf{x}\in\Omega^\text{+},
-\)</span><span class="math notranslate nohighlight">\(
-where \)</span>\phi:={\partial u}/{\partial\nu}<span class="math notranslate nohighlight">\( is the normal derivative of the exterior solution \)</span>u<span class="math notranslate nohighlight">\( and \)</span>g(\mathbf{x},\mathbf{y}):=\frac{1}{4\pi|\mathbf{x}-\mathbf{y}|}<span class="math notranslate nohighlight">\( is the Green's function of the 3D Laplacian. By taking boundary traces, we arrive at the following boundary integral equation of the first kind.
-\)</span><span class="math notranslate nohighlight">\(
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\phi:={\partial u}/{\partial\nu}\)</span> is the normal derivative of the exterior solution <span class="math notranslate nohighlight">\(u\)</span> and <span class="math notranslate nohighlight">\(g(\mathbf{x},\mathbf{y}):=\frac{1}{4\pi|\mathbf{x}-\mathbf{y}|}\)</span> is the Green’s function of the 3D Laplacian. By taking boundary traces, we arrive at the following boundary integral equation of the first kind.</p>
+<div class="math notranslate nohighlight">
+\[
 1 = -\int_{\Gamma} g(\mathbf{x},\mathbf{y})\phi(\mathbf{y})\,\mathrm{d}\mathbf{y} =: -\mathsf{V}\phi(\mathbf{x})\quad\text{for all }\mathbf{x}\in\Gamma.
-\)</span><span class="math notranslate nohighlight">\(
-The normalized capacity is now simply given by
-\)</span><span class="math notranslate nohighlight">\(
+\]</div>
+<p>The normalized capacity is now simply given by</p>
+<div class="math notranslate nohighlight">
+\[
 \text{cap}^*(\Omega) = -\frac{1}{4\pi}\int_\Gamma \phi(\mathbf{x}) \,\mathrm{d}\mathbf{x}.
-\)</span>$</p>
+\]</div>
 </section>
 <section id="implementation">
 <h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">#</a></h2>
