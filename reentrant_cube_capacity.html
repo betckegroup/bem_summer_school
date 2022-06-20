@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Implementational remarks &#8212; BEM Summer School - Lecture Notes</title>
+    <title>Computing the capacity of a cube with a re-entrant corner &#8212; BEM Summer School - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -54,8 +54,8 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Solving a Laplace problem with Dirichlet boundary conditions" href="laplace_interior_dirichlet.html" />
-    <link rel="prev" title="Solving the linear system" href="linear_system_solve.html" />
+    <link rel="next" title="Electromagnetic scattering from flat screens" href="maxwell_screen.html" />
+    <link rel="prev" title="Solving a Laplace problem with Dirichlet boundary conditions" href="laplace_interior_dirichlet.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -131,8 +131,8 @@ const thebe_selector_output = ".output, .cell_output"
    Solving the linear system
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="implementation.html">
    Implementational remarks
   </a>
  </li>
@@ -141,8 +141,8 @@ const thebe_selector_output = ".output, .cell_output"
    Solving a Laplace problem with Dirichlet boundary conditions
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="reentrant_cube_capacity.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Computing the capacity of a cube with a re-entrant corner
   </a>
  </li>
@@ -241,7 +241,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/implementation.ipynb"
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/reentrant_cube_capacity.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -284,7 +284,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/implementation.ipynb"
+        <a href="_sources/reentrant_cube_capacity.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -344,18 +344,13 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#parallelisation-and-vectorisation">
-   Parallelisation and vectorisation
+  <a class="reference internal nav-link" href="#background">
+   Background
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cpu-vs-gpu-assembly">
-   CPU vs GPU assembly
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#programming-languages">
-   Programming languages
+  <a class="reference internal nav-link" href="#implementation">
+   Implementation
   </a>
  </li>
 </ul>
@@ -367,7 +362,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>Implementational remarks</h1>
+                <h1>Computing the capacity of a cube with a re-entrant corner</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -378,18 +373,13 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#parallelisation-and-vectorisation">
-   Parallelisation and vectorisation
+  <a class="reference internal nav-link" href="#background">
+   Background
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#cpu-vs-gpu-assembly">
-   CPU vs GPU assembly
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#programming-languages">
-   Programming languages
+  <a class="reference internal nav-link" href="#implementation">
+   Implementation
   </a>
  </li>
 </ul>
@@ -402,32 +392,110 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="implementational-remarks">
-<h1>Implementational remarks<a class="headerlink" href="#implementational-remarks" title="Permalink to this headline">#</a></h1>
-<p>In this section we discuss implementational topics based on our own experience with boundary element software development.</p>
-<section id="parallelisation-and-vectorisation">
-<h2>Parallelisation and vectorisation<a class="headerlink" href="#parallelisation-and-vectorisation" title="Permalink to this headline">#</a></h2>
-<p>The multithreaded implementation of dense boundary element methods is straight forward. The interaction between any two triangles is independent of each other.</p>
-<p>The main difficulty appears upon summing local triangle contributions into the global BEM matrix. Consider for example the space of continuous, piecewise linear, basis functions. Each global dof consists of contributions from multiple triangles. In order to avoid writing into the same global dof at the same time from different threads one needs to either declare the global dof as atomic, or if this is not possible in the chosen language, use techniques such as graph coloring to ensure that at any given time we only process triangle pairs that do not sum into the same global dof.</p>
-<p>The idea of map coloring is very simple. We declare two triangles as neighbours if they sum into the global dof. We can then use simple greedy colouring techniques to assign a colour to each triangle so that neighbours always have a different colour. We can then process in parallel one colour after another.</p>
-<p>In addition to simple multithreading, SIMD vectorisation is extremely important to achieve performance. All modern CPUs support vector registers for floating point operations. This means that each core can execute several floating point operations simultaneously.</p>
-<p>On Intel and AMD CPUs the main standard is AVX2, which supports up to four parallel double precision or up to 8 parallel single precision operations.</p>
-<p>The way we implement vectorisation in Bempp is that we always process one test triangle simultaneously with 4/8 trial triangles. The caveat here though is what to do with adjacent triangles. Vectorisation only works if there is no divergence between the pipelines.</p>
-<p>Here, we use a small trick. We ignore the check whether some of the test/trial pairs are adjacent. We just process everything in a batch with the far-field rule. We then afterwards check if some of the interactions were from adjacent triangles and do not sum those into the global matrix. The singular interactions are then processed independently from the nonsingular interactions.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="computing-the-capacity-of-a-cube-with-a-re-entrant-corner">
+<h1>Computing the capacity of a cube with a re-entrant corner<a class="headerlink" href="#computing-the-capacity-of-a-cube-with-a-re-entrant-corner" title="Permalink to this headline">#</a></h1>
+<section id="background">
+<h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">#</a></h2>
+<p>The capacity <span class="math notranslate nohighlight">\(\text{cap}(\Omega)\)</span> of an isolated conductor <span class="math notranslate nohighlight">\(\Omega\subset\mathbb{R}^3\)</span> with boundary <span class="math notranslate nohighlight">\(\Gamma\)</span> measures its ability to store charges. It is defined as the ratio of the total surface equilibrium charge relative to its surface potential value. To compute the capacity, we need to solve the following exterior Laplace problem for the equilibrium potential <span class="math notranslate nohighlight">\(u\)</span> with unit surface value:
+$<span class="math notranslate nohighlight">\(
+\begin{align}
+-\Delta u &amp;= 0\quad\text{in }\Omega^\text{+},\\
+u &amp;= 1\quad\text{on }\Gamma,\\
+|u(\mathbf{x})| &amp;=\mathcal{O}\left(|\mathbf{x}|^{-1}\right)\quad\text{as }|\mathbf{x}|\rightarrow\infty.
+\end{align}
+\)</span><span class="math notranslate nohighlight">\(
+Here \)</span>\Omega^\text{+}<span class="math notranslate nohighlight">\( is the domain exterior to \)</span>\Omega<span class="math notranslate nohighlight">\(.
+The total surface charge of an isolated conductor is given by Gauss law as
+\)</span><span class="math notranslate nohighlight">\(
+\text{cap}(\Omega)=-\epsilon_0\int_{\Gamma}\frac{\partial u}{\partial\nu}(\mathbf{x})\,\mathrm{d}\mathbf{x}.
+\)</span><span class="math notranslate nohighlight">\(
+\)</span>\nu(\mathbf{x})<span class="math notranslate nohighlight">\( is the outward pointing normal direction for \)</span>\mathbf{x}\in\Gamma<span class="math notranslate nohighlight">\(, and \)</span>\epsilon_0<span class="math notranslate nohighlight">\( is the electric constant with value \)</span>\epsilon_0\approx 8.854\times 10^{-12},{\rm F/m}<span class="math notranslate nohighlight">\(. In the following we will use the normalized capacity \)</span>\text{cap}^*(\Omega)=-\frac{1}{4\pi}\int_{\Gamma}\frac{\partial u}{\partial\nu},d\mathbf{x}<span class="math notranslate nohighlight">\(. The normalized capacity has the value \)</span>1$ for the unit sphere.</p>
+<p>Using Green’s representation theorem and noting that the exterior Laplace double layer potential is zero for constant densities, we can represent the solution <span class="math notranslate nohighlight">\(u\)</span> as
+$<span class="math notranslate nohighlight">\(
+u(\mathbf{x}) = -\int_{\Gamma} g(\mathbf{x},\mathbf{y})\phi(\mathbf{y})\,\mathrm{d}\mathbf{y} \quad\text{for all }\mathbf{x}\in\Omega^\text{+},
+\)</span><span class="math notranslate nohighlight">\(
+where \)</span>\phi:={\partial u}/{\partial\nu}<span class="math notranslate nohighlight">\( is the normal derivative of the exterior solution \)</span>u<span class="math notranslate nohighlight">\( and \)</span>g(\mathbf{x},\mathbf{y}):=\frac{1}{4\pi|\mathbf{x}-\mathbf{y}|}<span class="math notranslate nohighlight">\( is the Green's function of the 3D Laplacian. By taking boundary traces, we arrive at the following boundary integral equation of the first kind.
+\)</span><span class="math notranslate nohighlight">\(
+1 = -\int_{\Gamma} g(\mathbf{x},\mathbf{y})\phi(\mathbf{y})\,\mathrm{d}\mathbf{y} =: -\mathsf{V}\phi(\mathbf{x})\quad\text{for all }\mathbf{x}\in\Gamma.
+\)</span><span class="math notranslate nohighlight">\(
+The normalized capacity is now simply given by
+\)</span><span class="math notranslate nohighlight">\(
+\text{cap}^*(\Omega) = -\frac{1}{4\pi}\int_\Gamma \phi(\mathbf{x}) \,\mathrm{d}\mathbf{x}.
+\)</span>$</p>
 </section>
-<section id="cpu-vs-gpu-assembly">
-<h2>CPU vs GPU assembly<a class="headerlink" href="#cpu-vs-gpu-assembly" title="Permalink to this headline">#</a></h2>
-<p>This is a frequently coming up question. In principle, GPUs are ideally suited for fast assembly of integral operators. We have extremely high throughput of data on GPUs and each individual interaction of a test/trial triangle pair can be easily handled as a GPU thread.</p>
-<p>The problem is memory latency. If we want to transfer an assembled matrix back to the CPU the transfer time can easily invalidate all performance gains from running the assembly on the GPU. Hence, if we want to use GPUs we need to keep the data on the GPU. But then we run into the problem of GPU memory being typically much smaller than CPU memory. So we can only keep the data for relatively small problems on the GPU.</p>
-<p>A solution to this issue is on-the-fly assembly on the GPU as part of the matrix-vector product. This means that as part of the matvec <span class="math notranslate nohighlight">\(Ax\)</span> we assemble the matrix elements of <span class="math notranslate nohighlight">\(A\)</span> on the fly while passing through the matvec and immediately discard computed matrix elements. This keeps the required memory small and for simple kernels such as Laplace the assembly is so fast that the overhead is relatively small.</p>
-<p>We have done successful experiments with this strategy with Maxwell problems on up to 200k unknowns while still achieving good performance for each matvec. Indeed, such an approach can outperform FMM and other fast evaluation methods for numbers of dofs in the low hundreds of thousands. Nevertheless, eventually the quadratic complexity takes over and fast solver methods become necessary.</p>
-</section>
-<section id="programming-languages">
-<h2>Programming languages<a class="headerlink" href="#programming-languages" title="Permalink to this headline">#</a></h2>
-<p>We have used for BEM development C++, Python, and now Rust. The programming language in principle does not matter. For interactive applications a mixture of low-level code for performant assembly and high-level interfaces is recommended. Also, the environment should have good support for SIMD execution as discussed above.</p>
-<p>C++ is an excellent choice in general for modern low-level HPC development due to its great support for heterogeneous computing frameworks (CUDA, SYCL, etc.). Python needs to be combined with a low-level computational part. We have some experience with Numba for Just-In-Time compiled fast code in Python. Numba is good for simple array algorithms but can run into problems for modern structures.</p>
-<p>Julia can produce very fast low-level code. Nevertheless, fast code development in Julia is not much different from code development in other low-level languages.</p>
-<p>Rust is a very young language but has a excellent tooling support, much better dependency management than C++, and a growing HPC ecosystem. It is definitely more than capable for complex HPC applications and achieves excellent performance. Its only caveat compared to C++ is that GPU support on Rust is still in its infancy.</p>
+<section id="implementation">
+<h2>Implementation<a class="headerlink" href="#implementation" title="Permalink to this headline">#</a></h2>
+<p>We start with the usual imports.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">bempp.api</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The grid re-entrant cube is predefined in the shapes module. By default it refines towards the singular corner. As function space on the grid we choose a simple space of piecewise constant functions.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grid</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">shapes</span><span class="o">.</span><span class="n">reentrant_cube</span><span class="p">(</span><span class="n">h</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">refinement_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">space</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">function_space</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="s2">&quot;DP&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we define the right-hand side.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">real_callable</span>
+<span class="k">def</span> <span class="nf">one_fun</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">domain_index</span><span class="p">,</span> <span class="n">res</span><span class="p">):</span>
+    <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    
+<span class="n">rhs</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">GridFunction</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">fun</span><span class="o">=</span><span class="n">one_fun</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The following code defines the left-hand side single-layer boundary operator.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">op</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">operators</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">laplace</span><span class="o">.</span><span class="n">single_layer</span><span class="p">(</span><span class="n">space</span><span class="p">,</span> <span class="n">space</span><span class="p">,</span> <span class="n">space</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We use GMRES to solve the system. To improve convergence we use a strong form discretisation that automatically preconditions with the mass matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sol</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">iteration_count</span> <span class="o">=</span> <span class="n">bempp</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">gmres</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">use_strong_form</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_iteration_count</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of iterations: </span><span class="si">{0}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration_count</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scipy/sparse/linalg/dsolve/linsolve.py:296: SparseEfficiencyWarning: splu requires CSC matrix format
+  warn(&#39;splu requires CSC matrix format&#39;, SparseEfficiencyWarning)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of iterations: 35
+</pre></div>
+</div>
+</div>
+</div>
+<p>To obtain the capacity we simply integrate the solution across the boundary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">normalized_capacity</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span> <span class="p">(</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span> <span class="n">sol</span><span class="o">.</span><span class="n">integrate</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The normalized capacity is </span><span class="si">{0}</span><span class="s2">.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">normalized_capacity</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The normalized capacity is 0.6455178938316151.
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 
@@ -458,17 +526,17 @@ title="Print to PDF"
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="linear_system_solve.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="laplace_interior_dirichlet.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Solving the linear system</p>
+            <p class="prev-next-title">Solving a Laplace problem with Dirichlet boundary conditions</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="laplace_interior_dirichlet.html" title="next page">
+    <a class='right-next' id="next-link" href="maxwell_screen.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Solving a Laplace problem with Dirichlet boundary conditions</p>
+        <p class="prev-next-title">Electromagnetic scattering from flat screens</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
