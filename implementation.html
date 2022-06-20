@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>BEM Summer School Lecture Notes &#8212; BEM Summer School - Lecture Notes</title>
+    <title>Implementational remarks &#8212; BEM Summer School - Lecture Notes</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -50,9 +50,12 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Discretising boundary integral operators" href="discretisation.html" />
+    <link rel="next" title="Low rank compressibility" href="low_rank_compression.html" />
+    <link rel="prev" title="Solving the linear system" href="linear_system_solve.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -106,8 +109,8 @@ const thebe_selector_output = ".output, .cell_output"
     <div class="bd-toc-item active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
                     BEM Summer School Lecture Notes
                 </a>
             </li>
@@ -117,7 +120,7 @@ const thebe_selector_output = ".output, .cell_output"
   Practical BEM
  </span>
 </p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="discretisation.html">
    Discretising boundary integral operators
@@ -128,8 +131,8 @@ const thebe_selector_output = ".output, .cell_output"
    Solving the linear system
   </a>
  </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="implementation.html">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
    Implementational remarks
   </a>
  </li>
@@ -215,6 +218,35 @@ title="Toggle navigation"
         
     </div>
     <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/implementation.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
 <button onclick="toggleFullScreen()"
   class="headerbtn"
   data-toggle="tooltip"
@@ -237,7 +269,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="_sources/intro.md"
+        <a href="_sources/implementation.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -248,7 +280,7 @@ title="Download source file"
 <span class="headerbtn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.md</span>
+<span class="headerbtn__text-container">.ipynb</span>
 </a>
 
       </li>
@@ -274,23 +306,80 @@ title="Print to PDF"
     </ul>
   </div>
 </div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
 
     </div>
 </div>
 
 <!-- Table of contents -->
 <div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parallelisation-and-vectorisation">
+   Parallelisation and vectorisation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cpu-vs-gpu-assembly">
+   CPU vs GPU assembly
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#programming-languages">
+   Programming languages
+  </a>
+ </li>
+</ul>
+
+    </nav>
 </div>
     </div>
     <div class="article row">
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>BEM Summer School Lecture Notes</h1>
+                <h1>Implementational remarks</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
                         
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parallelisation-and-vectorisation">
+   Parallelisation and vectorisation
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#cpu-vs-gpu-assembly">
+   CPU vs GPU assembly
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#programming-languages">
+   Programming languages
+  </a>
+ </li>
+</ul>
+
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -298,14 +387,33 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="bem-summer-school-lecture-notes">
-<h1>BEM Summer School Lecture Notes<a class="headerlink" href="#bem-summer-school-lecture-notes" title="Permalink to this headline">#</a></h1>
-<p>These lecture notes collect the traiining material for the lectures by
-Timo Betcke at the 2022 GCCE Summer School on Boundary Element Methods.</p>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
+  <section class="tex2jax_ignore mathjax_ignore" id="implementational-remarks">
+<h1>Implementational remarks<a class="headerlink" href="#implementational-remarks" title="Permalink to this headline">#</a></h1>
+<p>In this section we discuss implementational topics based on our own experience with boundary element software development.</p>
+<section id="parallelisation-and-vectorisation">
+<h2>Parallelisation and vectorisation<a class="headerlink" href="#parallelisation-and-vectorisation" title="Permalink to this headline">#</a></h2>
+<p>The multithreaded implementation of dense boundary element methods is straight forward. The interaction between any two triangles is independent of each other.</p>
+<p>The main difficulty appears upon summing local triangle contributions into the global BEM matrix. Consider for example the space of continuous, piecewise linear, basis functions. Each global dof consists of contributions from multiple triangles. In order to avoid writing into the same global dof at the same time from different threads one needs to either declare the global dof as atomic, or if this is not possible in the chosen language, use techniques such as graph coloring to ensure that at any given time we only process triangle pairs that do not sum into the same global dof.</p>
+<p>The idea of map coloring is very simple. We declare two triangles as neighbours if they sum into the global dof. We can then use simple greedy colouring techniques to assign a colour to each triangle so that neighbours always have a different colour. We can then process in parallel one colour after another.</p>
+<p>In addition to simple multithreading, SIMD vectorisation is extremely important to achieve performance. All modern CPUs support vector registers for floating point operations. This means that each core can execute several floating point operations simultaneously.</p>
+<p>On Intel and AMD CPUs the main standard is AVX2, which supports up to four parallel double precision or up to 8 parallel single precision operations.</p>
+<p>The way we implement vectorisation in Bempp is that we always process one test triangle simultaneously with 4/8 trial triangles. The caveat here though is what to do with adjacent triangles. Vectorisation only works if there is no divergence between the pipelines.</p>
+<p>Here, we use a small trick. We ignore the check whether some of the test/trial pairs are adjacent. We just process everything in a batch with the far-field rule. We then afterwards check if some of the interactions were from adjacent triangles and do not sum those into the global matrix. The singular interactions are then processed independently from the nonsingular interactions.</p>
+</section>
+<section id="cpu-vs-gpu-assembly">
+<h2>CPU vs GPU assembly<a class="headerlink" href="#cpu-vs-gpu-assembly" title="Permalink to this headline">#</a></h2>
+<p>This is a frequently coming up question. In principle, GPUs are ideally suited for fast assembly of integral operators. We have extremely high throughput of data on GPUs and each individual interaction of a test/trial triangle pair can be easily handled as a GPU thread.</p>
+<p>The problem is memory latency. If we want to transfer an assembled matrix back to the CPU the transfer time can easily invalidate all performance gains from running the assembly on the GPU. Hence, if we want to use GPUs we need to keep the data on the GPU. But then we run into the problem of GPU memory being typically much smaller than CPU memory. So we can only keep the data for relatively small problems on the GPU.</p>
+<p>A solution to this issue is on-the-fly assembly on the GPU as part of the matrix-vector product. This means that as part of the matvec <span class="math notranslate nohighlight">\(Ax\)</span> we assemble the matrix elements of <span class="math notranslate nohighlight">\(A\)</span> on the fly while passing through the matvec and immediately discard computed matrix elements. This keeps the required memory small and for simple kernels such as Laplace the assembly is so fast that the overhead is relatively small.</p>
+<p>We have done successful experiments with this strategy with Maxwell problems on up to 200k unknowns while still achieving good performance for each matvec. Indeed, such an approach can outperform FMM and other fast evaluation methods for numbers of dofs in the low hundreds of thousands. Nevertheless, eventually the quadratic complexity takes over and fast solver methods become necessary.</p>
+</section>
+<section id="programming-languages">
+<h2>Programming languages<a class="headerlink" href="#programming-languages" title="Permalink to this headline">#</a></h2>
+<p>We have used for BEM development C++, Python, and now Rust. The programming language in principle does not matter. For interactive applications a mixture of low-level code for performant assembly and high-level interfaces is recommended. Also, the environment should have good support for SIMD execution as discussed above.</p>
+<p>C++ is an excellent choice in general for modern low-level HPC development due to its great support for heterogeneous computing frameworks (CUDA, SYCL, etc.). Python needs to be combined with a low-level computational part. We have some experience with Numba for Just-In-Time compiled fast code in Python. Numba is good for simple array algorithms but can run into problems for modern structures.</p>
+<p>Julia can produce very fast low-level code. Nevertheless, fast code development in Julia is not much different from code development in other low-level languages.</p>
+<p>Rust is a very young language but has a excellent tooling support, much better dependency management than C++, and a growing HPC ecosystem. It is definitely more than capable for complex HPC applications and achieves excellent performance. Its only caveat compared to C++ is that GPU support on Rust is still in its infancy.</p>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -335,10 +443,17 @@ Timo Betcke at the 2022 GCCE Summer School on Boundary Element Methods.</p>
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='right-next' id="next-link" href="discretisation.html" title="next page">
+    <a class='left-prev' id="prev-link" href="linear_system_solve.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Solving the linear system</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="low_rank_compression.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Discretising boundary integral operators</p>
+        <p class="prev-next-title">Low rank compressibility</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
