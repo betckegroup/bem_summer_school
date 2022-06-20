@@ -6,6 +6,9 @@ parts:
   - file: discretisation.ipynb
   - file: linear_system_solve.ipynb
   - file: implementation.ipynb
+  - file: laplace_interior_dirichlet.ipynb
+  - file: reentrant_cube_capacity.ipynb
+  - file: maxwell_screen.ipynb
 - caption: Fast direct solvers
   chapters:
   - file: low_rank_compression.ipynb
