@@ -4,6 +4,7 @@ parts:
 - caption: Practical BEM
   chapters:
   - file: discretisation.ipynb
+  - file: linear_system_solve.ipynb
 - caption: Fast direct solvers
   chapters:
   - file: low_rank_compression.ipynb
