@@ -432,7 +432,7 @@ with</p></li>
 </ul>
 <div class="math notranslate nohighlight">
 \[
-[A_K][i, j] = \frac{1}{2}\int_{\tau_i\cap\tau_j}1ds(x)ds(y) + \int_{\tau_i}\int_{\tau_j}\frac{\partial g(x, y)}{\partial n(y)}ds(y)ds(x)
+[A_K][i, j] = \frac{1}{2}\int_{\tau_i\cap\tau_j}1ds(x)ds(y) - \int_{\tau_i}\int_{\tau_j}\frac{\partial g(x, y)}{\partial n(y)}ds(y)ds(x)
 \]</div>
 <p>In both cases the trial and test spaces are simply the spaces of piecewise constant functions on each triangle.</p>
 <section id="setting-up-the-test-problems">
@@ -477,13 +477,13 @@ to approximate the eigenvalues and draw them. This ensures that the notebook sti
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bempp:HOST:INFO: Created grid with id b7d63faa-44eb-495b-ae73-b7b82f290166. Elements: 32768. Edges: 49152. Vertices: 16386
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bempp:HOST:INFO: Created grid with id 678f12e3-e5bf-4d61-8f49-1a7d783f5688. Elements: 32768. Edges: 49152. Vertices: 16386
 bempp:HOST:INFO: OpenCL CPU Device set to: AMD Ryzen Threadripper 3970X 32-Core Processor 
 /home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/pyopencl/__init__.py:274: CompilerWarning: Non-empty compiler output encountered. Set the environment variable PYOPENCL_COMPILER_OUTPUT=1 to see more.
   warn(&quot;Non-empty compiler output encountered. Set the &quot;
 /home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/pyopencl/__init__.py:274: CompilerWarning: Non-empty compiler output encountered. Set the environment variable PYOPENCL_COMPILER_OUTPUT=1 to see more.
   warn(&quot;Non-empty compiler output encountered. Set the &quot;
-bempp:HOST:INFO: Created grid with id 52a182f6-1dda-4090-852e-36629c3aa3cc. Elements: 512. Edges: 768. Vertices: 258
+bempp:HOST:INFO: Created grid with id 2a9d198c-fe2a-47db-82be-d8b572d60833. Elements: 512. Edges: 768. Vertices: 258
 </pre></div>
 </div>
 </div>
@@ -549,94 +549,94 @@ bempp:HOST:INFO: Created grid with id 52a182f6-1dda-4090-852e-36629c3aa3cc. Elem
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/betcke/miniconda3/envs/dev/lib/python3.9/site-packages/scipy/sparse/linalg/dsolve/linsolve.py:318: SparseEfficiencyWarning: splu requires CSC matrix format
   warn(&#39;splu requires CSC matrix format&#39;, SparseEfficiencyWarning)
 bempp:HOST:INFO: Starting GMRES iteration
-bempp:HOST:INFO: GMRES Iteration 1 with residual 0.865283501884796
-bempp:HOST:INFO: GMRES Iteration 2 with residual 0.8182754182410917
-bempp:HOST:INFO: GMRES Iteration 3 with residual 0.7467522252749375
-bempp:HOST:INFO: GMRES Iteration 4 with residual 0.6467895423392332
-bempp:HOST:INFO: GMRES Iteration 5 with residual 0.5683857802724265
-bempp:HOST:INFO: GMRES Iteration 6 with residual 0.480094711067124
-bempp:HOST:INFO: GMRES Iteration 7 with residual 0.40197442634058256
-bempp:HOST:INFO: GMRES Iteration 8 with residual 0.3355360278457393
-bempp:HOST:INFO: GMRES Iteration 9 with residual 0.2760903033647621
-bempp:HOST:INFO: GMRES Iteration 10 with residual 0.22383306750687634
-bempp:HOST:INFO: GMRES Iteration 11 with residual 0.177266733575374
-bempp:HOST:INFO: GMRES Iteration 12 with residual 0.1421361853041288
-bempp:HOST:INFO: GMRES Iteration 13 with residual 0.12921631949619952
-bempp:HOST:INFO: GMRES Iteration 14 with residual 0.10484278264851037
-bempp:HOST:INFO: GMRES Iteration 15 with residual 0.08327648739292136
-bempp:HOST:INFO: GMRES Iteration 16 with residual 0.06666230733262997
-bempp:HOST:INFO: GMRES Iteration 17 with residual 0.05974066079321031
-bempp:HOST:INFO: GMRES Iteration 18 with residual 0.055345335744355725
-bempp:HOST:INFO: GMRES Iteration 19 with residual 0.04669369372767945
-bempp:HOST:INFO: GMRES Iteration 20 with residual 0.03672601466298451
-bempp:HOST:INFO: GMRES Iteration 21 with residual 0.03304331200873078
-bempp:HOST:INFO: GMRES Iteration 22 with residual 0.032317932371302475
-bempp:HOST:INFO: GMRES Iteration 23 with residual 0.030245034220260054
-bempp:HOST:INFO: GMRES Iteration 24 with residual 0.028608117030848635
-bempp:HOST:INFO: GMRES Iteration 25 with residual 0.025420076181090653
-bempp:HOST:INFO: GMRES Iteration 26 with residual 0.023647507008733686
-bempp:HOST:INFO: GMRES Iteration 27 with residual 0.020025023436450507
-bempp:HOST:INFO: GMRES Iteration 28 with residual 0.01803096115813286
-bempp:HOST:INFO: GMRES Iteration 29 with residual 0.014746136515314203
-bempp:HOST:INFO: GMRES Iteration 30 with residual 0.012307936815209608
-bempp:HOST:INFO: GMRES Iteration 31 with residual 0.010128869502627147
-bempp:HOST:INFO: GMRES Iteration 32 with residual 0.008306262839755616
-bempp:HOST:INFO: GMRES Iteration 33 with residual 0.006995215596899741
-bempp:HOST:INFO: GMRES Iteration 34 with residual 0.006316697579351628
-bempp:HOST:INFO: GMRES Iteration 35 with residual 0.005124900994428298
-bempp:HOST:INFO: GMRES Iteration 36 with residual 0.0041084685626884485
-bempp:HOST:INFO: GMRES Iteration 37 with residual 0.0035810099036750055
-bempp:HOST:INFO: GMRES Iteration 38 with residual 0.003099591470697038
-bempp:HOST:INFO: GMRES Iteration 39 with residual 0.0028613523692889234
-bempp:HOST:INFO: GMRES Iteration 40 with residual 0.0023670735782809036
-bempp:HOST:INFO: GMRES Iteration 41 with residual 0.0022459716857122056
-bempp:HOST:INFO: GMRES Iteration 42 with residual 0.002145646424940707
-bempp:HOST:INFO: GMRES Iteration 43 with residual 0.0019848425851774084
-bempp:HOST:INFO: GMRES Iteration 44 with residual 0.0018422368991018285
-bempp:HOST:INFO: GMRES Iteration 45 with residual 0.00161273616305907
-bempp:HOST:INFO: GMRES Iteration 46 with residual 0.0014501502892209932
-bempp:HOST:INFO: GMRES Iteration 47 with residual 0.0013046996313118943
-bempp:HOST:INFO: GMRES Iteration 48 with residual 0.001134268778737116
-bempp:HOST:INFO: GMRES Iteration 49 with residual 0.0009545356681886175
-bempp:HOST:INFO: GMRES Iteration 50 with residual 0.0007984045467834078
-bempp:HOST:INFO: GMRES Iteration 51 with residual 0.0006680503550660573
-bempp:HOST:INFO: GMRES Iteration 52 with residual 0.0005577479466404359
-bempp:HOST:INFO: GMRES Iteration 53 with residual 0.00048579533956282276
-bempp:HOST:INFO: GMRES Iteration 54 with residual 0.0004403856261693189
-bempp:HOST:INFO: GMRES Iteration 55 with residual 0.00037476782737975393
-bempp:HOST:INFO: GMRES Iteration 56 with residual 0.0003204926173260658
-bempp:HOST:INFO: GMRES Iteration 57 with residual 0.0002876315490864872
-bempp:HOST:INFO: GMRES Iteration 58 with residual 0.0002638403412043602
-bempp:HOST:INFO: GMRES Iteration 59 with residual 0.00023050619745856928
-bempp:HOST:INFO: GMRES Iteration 60 with residual 0.00019950885952884896
-bempp:HOST:INFO: GMRES Iteration 61 with residual 0.00019422643970799151
-bempp:HOST:INFO: GMRES Iteration 62 with residual 0.00018083929761913425
-bempp:HOST:INFO: GMRES Iteration 63 with residual 0.0001640341321126325
-bempp:HOST:INFO: GMRES Iteration 64 with residual 0.00015315028180293367
-bempp:HOST:INFO: GMRES Iteration 65 with residual 0.00014307369873905584
-bempp:HOST:INFO: GMRES Iteration 66 with residual 0.00012360816573638963
-bempp:HOST:INFO: GMRES Iteration 67 with residual 0.00010990949847125591
-bempp:HOST:INFO: GMRES Iteration 68 with residual 9.454792228194357e-05
-bempp:HOST:INFO: GMRES Iteration 69 with residual 7.84827568794843e-05
-bempp:HOST:INFO: GMRES Iteration 70 with residual 6.841998649505815e-05
-bempp:HOST:INFO: GMRES Iteration 71 with residual 5.684938683471638e-05
-bempp:HOST:INFO: GMRES Iteration 72 with residual 4.670970060016766e-05
-bempp:HOST:INFO: GMRES Iteration 73 with residual 4.29489037519109e-05
-bempp:HOST:INFO: GMRES Iteration 74 with residual 3.7026670618232604e-05
-bempp:HOST:INFO: GMRES Iteration 75 with residual 3.119736783017419e-05
-bempp:HOST:INFO: GMRES Iteration 76 with residual 2.7746200677685374e-05
-bempp:HOST:INFO: GMRES Iteration 77 with residual 2.4507508331253024e-05
-bempp:HOST:INFO: GMRES Iteration 78 with residual 2.2882110485214235e-05
-bempp:HOST:INFO: GMRES Iteration 79 with residual 2.0428073124847054e-05
-bempp:HOST:INFO: GMRES Iteration 80 with residual 1.831068156768704e-05
-bempp:HOST:INFO: GMRES Iteration 81 with residual 1.744350157012266e-05
-bempp:HOST:INFO: GMRES Iteration 82 with residual 1.6579648668031678e-05
-bempp:HOST:INFO: GMRES Iteration 83 with residual 1.549458447894526e-05
-bempp:HOST:INFO: GMRES Iteration 84 with residual 1.4312351547142651e-05
-bempp:HOST:INFO: GMRES Iteration 85 with residual 1.3221188154536586e-05
-bempp:HOST:INFO: GMRES Iteration 86 with residual 1.169564552366975e-05
-bempp:HOST:INFO: GMRES Iteration 87 with residual 1.0355408245352669e-05
-bempp:HOST:INFO: GMRES Iteration 88 with residual 9.171565555026207e-06
+bempp:HOST:INFO: GMRES Iteration 1 with residual 0.9253974258008764
+bempp:HOST:INFO: GMRES Iteration 2 with residual 0.8299327427756287
+bempp:HOST:INFO: GMRES Iteration 3 with residual 0.7531377287864541
+bempp:HOST:INFO: GMRES Iteration 4 with residual 0.6393975067816466
+bempp:HOST:INFO: GMRES Iteration 5 with residual 0.5584504126915677
+bempp:HOST:INFO: GMRES Iteration 6 with residual 0.4762188082219082
+bempp:HOST:INFO: GMRES Iteration 7 with residual 0.40116302739497317
+bempp:HOST:INFO: GMRES Iteration 8 with residual 0.33486056760154237
+bempp:HOST:INFO: GMRES Iteration 9 with residual 0.27472375631340423
+bempp:HOST:INFO: GMRES Iteration 10 with residual 0.22319934755678547
+bempp:HOST:INFO: GMRES Iteration 11 with residual 0.1794270803818353
+bempp:HOST:INFO: GMRES Iteration 12 with residual 0.14266479292528772
+bempp:HOST:INFO: GMRES Iteration 13 with residual 0.12063612885471463
+bempp:HOST:INFO: GMRES Iteration 14 with residual 0.10515179685109224
+bempp:HOST:INFO: GMRES Iteration 15 with residual 0.08255635530264079
+bempp:HOST:INFO: GMRES Iteration 16 with residual 0.06663078754324368
+bempp:HOST:INFO: GMRES Iteration 17 with residual 0.06076691923470958
+bempp:HOST:INFO: GMRES Iteration 18 with residual 0.055575280561196774
+bempp:HOST:INFO: GMRES Iteration 19 with residual 0.04644468868018972
+bempp:HOST:INFO: GMRES Iteration 20 with residual 0.03660489876802902
+bempp:HOST:INFO: GMRES Iteration 21 with residual 0.03245773574687991
+bempp:HOST:INFO: GMRES Iteration 22 with residual 0.03194487634725406
+bempp:HOST:INFO: GMRES Iteration 23 with residual 0.029886477420378036
+bempp:HOST:INFO: GMRES Iteration 24 with residual 0.028076964232539112
+bempp:HOST:INFO: GMRES Iteration 25 with residual 0.025189446874647716
+bempp:HOST:INFO: GMRES Iteration 26 with residual 0.023304536434364996
+bempp:HOST:INFO: GMRES Iteration 27 with residual 0.020003425791249613
+bempp:HOST:INFO: GMRES Iteration 28 with residual 0.01782671848957703
+bempp:HOST:INFO: GMRES Iteration 29 with residual 0.014898385734323116
+bempp:HOST:INFO: GMRES Iteration 30 with residual 0.012416732011434358
+bempp:HOST:INFO: GMRES Iteration 31 with residual 0.010274183365179304
+bempp:HOST:INFO: GMRES Iteration 32 with residual 0.00828413009638546
+bempp:HOST:INFO: GMRES Iteration 33 with residual 0.0069090696285281404
+bempp:HOST:INFO: GMRES Iteration 34 with residual 0.006233800108222297
+bempp:HOST:INFO: GMRES Iteration 35 with residual 0.005076808865000625
+bempp:HOST:INFO: GMRES Iteration 36 with residual 0.0041040954996694416
+bempp:HOST:INFO: GMRES Iteration 37 with residual 0.003601507231443753
+bempp:HOST:INFO: GMRES Iteration 38 with residual 0.0032710600668408715
+bempp:HOST:INFO: GMRES Iteration 39 with residual 0.0028824599895642747
+bempp:HOST:INFO: GMRES Iteration 40 with residual 0.0023788143609553667
+bempp:HOST:INFO: GMRES Iteration 41 with residual 0.0021438372458272487
+bempp:HOST:INFO: GMRES Iteration 42 with residual 0.0020945928390855625
+bempp:HOST:INFO: GMRES Iteration 43 with residual 0.0019370045311693747
+bempp:HOST:INFO: GMRES Iteration 44 with residual 0.001803923065816967
+bempp:HOST:INFO: GMRES Iteration 45 with residual 0.0015955588027836314
+bempp:HOST:INFO: GMRES Iteration 46 with residual 0.0014638760584890628
+bempp:HOST:INFO: GMRES Iteration 47 with residual 0.0012919188795919312
+bempp:HOST:INFO: GMRES Iteration 48 with residual 0.0011506157994158486
+bempp:HOST:INFO: GMRES Iteration 49 with residual 0.0009924186028243188
+bempp:HOST:INFO: GMRES Iteration 50 with residual 0.0008391572735369537
+bempp:HOST:INFO: GMRES Iteration 51 with residual 0.0007112732775234726
+bempp:HOST:INFO: GMRES Iteration 52 with residual 0.0006008483715496614
+bempp:HOST:INFO: GMRES Iteration 53 with residual 0.0005161606984536316
+bempp:HOST:INFO: GMRES Iteration 54 with residual 0.0004733079306422792
+bempp:HOST:INFO: GMRES Iteration 55 with residual 0.0003902771787250715
+bempp:HOST:INFO: GMRES Iteration 56 with residual 0.0003192024791017203
+bempp:HOST:INFO: GMRES Iteration 57 with residual 0.00028833710425010757
+bempp:HOST:INFO: GMRES Iteration 58 with residual 0.00026423137975114305
+bempp:HOST:INFO: GMRES Iteration 59 with residual 0.00023836641889791207
+bempp:HOST:INFO: GMRES Iteration 60 with residual 0.00020186493782229804
+bempp:HOST:INFO: GMRES Iteration 61 with residual 0.000190850643538279
+bempp:HOST:INFO: GMRES Iteration 62 with residual 0.00017605140510733248
+bempp:HOST:INFO: GMRES Iteration 63 with residual 0.0001653174855844082
+bempp:HOST:INFO: GMRES Iteration 64 with residual 0.00015402648251235747
+bempp:HOST:INFO: GMRES Iteration 65 with residual 0.00013576835115618058
+bempp:HOST:INFO: GMRES Iteration 66 with residual 0.0001252841297136578
+bempp:HOST:INFO: GMRES Iteration 67 with residual 0.00011073561882473996
+bempp:HOST:INFO: GMRES Iteration 68 with residual 9.797897671603649e-05
+bempp:HOST:INFO: GMRES Iteration 69 with residual 8.33994067405634e-05
+bempp:HOST:INFO: GMRES Iteration 70 with residual 7.127618792027218e-05
+bempp:HOST:INFO: GMRES Iteration 71 with residual 6.054021493437165e-05
+bempp:HOST:INFO: GMRES Iteration 72 with residual 5.0772106090504235e-05
+bempp:HOST:INFO: GMRES Iteration 73 with residual 4.421457394938705e-05
+bempp:HOST:INFO: GMRES Iteration 74 with residual 4.05327208210358e-05
+bempp:HOST:INFO: GMRES Iteration 75 with residual 3.4185458935150515e-05
+bempp:HOST:INFO: GMRES Iteration 76 with residual 2.8792962285776204e-05
+bempp:HOST:INFO: GMRES Iteration 77 with residual 2.621867703669438e-05
+bempp:HOST:INFO: GMRES Iteration 78 with residual 2.4066622527389385e-05
+bempp:HOST:INFO: GMRES Iteration 79 with residual 2.1451218936993574e-05
+bempp:HOST:INFO: GMRES Iteration 80 with residual 1.849045407720989e-05
+bempp:HOST:INFO: GMRES Iteration 81 with residual 1.6987663950781136e-05
+bempp:HOST:INFO: GMRES Iteration 82 with residual 1.6342729896443616e-05
+bempp:HOST:INFO: GMRES Iteration 83 with residual 1.5302423266559748e-05
+bempp:HOST:INFO: GMRES Iteration 84 with residual 1.428098526395812e-05
+bempp:HOST:INFO: GMRES Iteration 85 with residual 1.2651923506499847e-05
+bempp:HOST:INFO: GMRES Iteration 86 with residual 1.1563887050478922e-05
+bempp:HOST:INFO: GMRES Iteration 87 with residual 1.0234840500978743e-05
+bempp:HOST:INFO: GMRES Iteration 88 with residual 9.093345831539904e-06
 bempp:HOST:INFO: GMRES finished in 88 iterations and took 1.60E+01 sec.
 </pre></div>
 </div>
@@ -671,11 +671,11 @@ bempp:HOST:INFO: GMRES finished in 88 iterations and took 1.60E+01 sec.
 </div>
 <div class="cell_output docutils container">
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bempp:HOST:INFO: Starting GMRES iteration
-bempp:HOST:INFO: GMRES Iteration 1 with residual 0.008454857100700427
-bempp:HOST:INFO: GMRES Iteration 2 with residual 0.0018043362094335256
-bempp:HOST:INFO: GMRES Iteration 3 with residual 0.00031478780918214736
-bempp:HOST:INFO: GMRES Iteration 4 with residual 2.7240750636403492e-05
-bempp:HOST:INFO: GMRES Iteration 5 with residual 1.5957049272245287e-06
+bempp:HOST:INFO: GMRES Iteration 1 with residual 0.011740362184927824
+bempp:HOST:INFO: GMRES Iteration 2 with residual 0.0032789275004399877
+bempp:HOST:INFO: GMRES Iteration 3 with residual 0.00035811035485506035
+bempp:HOST:INFO: GMRES Iteration 4 with residual 2.633118193451425e-05
+bempp:HOST:INFO: GMRES Iteration 5 with residual 1.3958641362734612e-06
 bempp:HOST:INFO: GMRES finished in 5 iterations and took 1.19E+00 sec.
 </pre></div>
 </div>
@@ -687,7 +687,7 @@ bempp:HOST:INFO: GMRES finished in 5 iterations and took 1.19E+00 sec.
 </div>
 <p>In the above two examples one notices the parameter <code class="docutils literal notranslate"><span class="pre">use_strong_form=True</span></code>. This is the Bempp notation for using mass matrix preconditioning. This means that instead of the system <span class="math notranslate nohighlight">\(Ax=b\)</span>. We solve the system <span class="math notranslate nohighlight">\(M^{-1}Ax = M^{-1}b\)</span>, where <span class="math notranslate nohighlight">\(M\)</span> is the discretisation of the identity matrix. This is a rescaling that removes ill-conditioning due to the size of the elements.</p>
 <p>More generally, preconditioners are matrices <span class="math notranslate nohighlight">\(P\)</span>, such that iterative solvers for <span class="math notranslate nohighlight">\(P^{-1}Ax = P^{-1}b\)</span> converge faster to the correct solution than just iterative solvers applied to the equation <span class="math notranslate nohighlight">\(Ax=b\)</span>.</p>
-<p>While the double-layer operator converges in just a few iterations the single-layer operator takes much longer. This is due to its eigenvalues being clustered around zero. Integral equations with <span class="math notranslate nohighlight">\(\frac{1}{2}I+K\)</span> are also called Fredholm integral equations of the second kind while equations with the operator <span class="math notranslate nohighlight">\(V\)</span> on the left-hand side are called Fredholm integral operators of the first kind.</p>
+<p>While the double-layer operator converges in just a few iterations the single-layer operator takes much longer. This is due to its eigenvalues being clustered around zero. Integral equations with <span class="math notranslate nohighlight">\(\frac{1}{2}I-K\)</span> are also called Fredholm integral equations of the second kind while equations with the operator <span class="math notranslate nohighlight">\(V\)</span> on the left-hand side are called Fredholm integral operators of the first kind.</p>
 <p>For second kind integral equations mass matrix preconditioning is sufficient. For first kind integral equations we often want more sophisticated operator preconditioners such that <span class="math notranslate nohighlight">\(P^{-1}A\)</span> has eigenvalues clustered away from zero.</p>
 <p>We note that we could have used CG as iterative solver for the single-layer operator <span class="math notranslate nohighlight">\(V\)</span>. The reason is that internally Bempp ignores that <span class="math notranslate nohighlight">\(M^{-1}A_K\)</span> could be solved as a preconditioned positive definite system and treats it as un unsymmetric system. By extracting the matrices and using an external routine one could circumvent this.</p>
 </section>
