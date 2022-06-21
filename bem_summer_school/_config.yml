@@ -12,3 +12,9 @@ logo                        : logo.png  # A path to the book logo
 execute:
   execute_notebooks: 'off'
 
+bibtex_bibfiles:
+    - references.bib
+
+sphinx:
+  config:
+    bibtex_reference_style: author_year

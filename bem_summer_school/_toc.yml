@@ -15,3 +15,7 @@ parts:
   - file: partitioning.ipynb
   - file: hmatrices.ipynb
   - file: fmm.ipynb
+- caption: Addendum
+  chapters:
+  - file: bibliography
+
