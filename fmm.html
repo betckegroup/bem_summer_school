@@ -54,6 +54,7 @@ const thebe_selector_output = ".output, .cell_output"
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Bibliography" href="bibliography.html" />
     <link rel="prev" title="Hierarchical (\(\mathcal{H}\)-)Matrices" href="hmatrices.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
@@ -179,6 +180,18 @@ const thebe_selector_output = ".output, .cell_output"
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
    Fast Multipole Methods
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Addendum
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
   </a>
  </li>
 </ul>
@@ -455,6 +468,8 @@ title="Print to PDF"
 <h1>Fast Multipole Methods<a class="headerlink" href="#fast-multipole-methods" title="Permalink to this headline">#</a></h1>
 <p>Fast Multipole Methods allow the <span class="math notranslate nohighlight">\(\mathcal{O}(N)\)</span> computation of Green’s function interactions. While the algorithmic description is very different to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix methods the underlying idea of evaluating near-field interactions directly and far-field interactions approximately through low-rank representations, is similar.</p>
 <p>There are a multitude of different types of Fast Multipole Methods. In this section we give a very high-level description that avoids technical details as far as possible which distinguish different typs of FMM.</p>
+<p>A beautiful introduction to the ideas of the FMM is the paper <span id="id1">[<a class="reference internal" href="bibliography.html#id8" title="Lexing Ying. A pedestrian introduction to fast multipole methods. Science China Mathematics, 55:, 05 2012. doi:10.1007/s11425-012-4392-0.">Ying, 2012</a>]</span>.
+Well worth a read is the original article by <span id="id2">[<a class="reference internal" href="bibliography.html#id9" title="L Greengard and V Rokhlin. A fast algorithm for particle simulations. Journal of Computational Physics, 73(2):325-348, 1987.">Greengard and Rokhlin, 1987</a>]</span>.</p>
 <section id="basic-ideas">
 <h2>Basic ideas<a class="headerlink" href="#basic-ideas" title="Permalink to this headline">#</a></h2>
 <p>We assume that we have <span class="math notranslate nohighlight">\(N\)</span> particles <span class="math notranslate nohighlight">\(x_i\)</span>, <span class="math notranslate nohighlight">\(i=1, \dots, N\)</span> in <span class="math notranslate nohighlight">\([0, 1]^d\)</span> for <span class="math notranslate nohighlight">\(d=2,3\)</span>. Let <span class="math notranslate nohighlight">\(G\)</span> be the matrix of Green’s function interactions defined by <span class="math notranslate nohighlight">\(G[i, j] = g(x_i, x_j)\)</span>. Hence, we assume that we have the same set of source and target particles. This is no restriction.</p>
@@ -563,10 +578,9 @@ on the number <span class="math notranslate nohighlight">\(N\)</span> of particl
 <p>We have so far described the general flow of an FMM. The difference between FMM realisations is in how the various translation operators are implemented.</p>
 <p>Frequently used implementations include the following.</p>
 <ul class="simple">
-<li><p>The classical Greengard/Rohklin FMM based on spherical harmonics expansions. This is the classical FMM as originally described by Greengard and Rohklin. It is based on approximating fields by spherical harmonic expansions and the translation of these expansions between boxes.
-Over the years a number of improvements have been made to these methods. They are memory efficient and fast.</p></li>
-<li><p>Kernel-Independent FMM. The KIFMM approximates local and exterior fields by discrete single-layer potential representations over the boundary of a box. Translation operators are implemented by a mixture of approximation operators, low-rank approximations, and Fast Fourier Transforms, depending on the implementational details. These methods are considered very efficient for high accuracy requirements.</p></li>
-<li><p>Black-Box FMM. The Black-Box FMM uses Chebychev interpolation to represent kernels. Translation operators are implemented by a mixture of low-rank approximation techniques and direct evaluation of Chebychev interpolation polynomials.</p></li>
+<li><p>The classical Greengard/Rohklin FMM <span id="id3">[<a class="reference internal" href="bibliography.html#id9" title="L Greengard and V Rokhlin. A fast algorithm for particle simulations. Journal of Computational Physics, 73(2):325-348, 1987.">Greengard and Rokhlin, 1987</a>]</span> based on spherical harmonics expansions. Over the years a number of improvements have been made to this method. Modern variants are memory efficient and fast..</p></li>
+<li><p>Kernel-Independent FMM <span id="id4">[<a class="reference internal" href="bibliography.html#id10" title="Lexing Ying, George Biros, and Denis Zorin. A kernel-independent adaptive fast multipole algorithm in two and three dimensions. Journal of Computational Physics, 196(2):591-626, 2004.">Ying <em>et al.</em>, 2004</a>]</span>. The KIFMM approximates local and exterior fields by discrete single-layer potential representations over the boundary of a box. Translation operators are implemented by a mixture of approximation operators, low-rank approximations, and Fast Fourier Transforms, depending on the implementational details. These methods are considered very efficient for high accuracy requirements.</p></li>
+<li><p>Black-Box FMM <span id="id5">[<a class="reference internal" href="bibliography.html#id11" title="William Fong and Eric Darve. The black-box fast multipole method. Journal of Computational Physics, 228(23):8712-8725, 2009.">Fong and Darve, 2009</a>]</span>. The Black-Box FMM uses Chebychev interpolation to represent kernels. Translation operators are implemented by a mixture of low-rank approximation techniques and direct evaluation of Chebychev interpolation polynomials.</p></li>
 </ul>
 </section>
 </section>
@@ -604,6 +618,13 @@ Over the years a number of improvements have been made to these methods. They ar
             <p class="prev-next-subtitle">previous</p>
             <p class="prev-next-title">Hierarchical (<span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-)Matrices</p>
         </div>
+    </a>
+    <a class='right-next' id="next-link" href="bibliography.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Bibliography</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
     </a>
 </div>
             </footer>

@@ -183,6 +183,18 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Addendum
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -557,6 +569,7 @@ title="Print to PDF"
   <section class="tex2jax_ignore mathjax_ignore" id="low-rank-compressibility">
 <h1>Low rank compressibility<a class="headerlink" href="#low-rank-compressibility" title="Permalink to this headline">#</a></h1>
 <p>In this section we discuss basic properties of low-rank approximations and briefly introduce some algorithms to compute low-rank approximations. This will form the foundations to understand fast evaluation methods such as Hierarchical Matrices or Fast Multipole Methods.</p>
+<p>An excellent introduction into low-rank approximation techniques is given by <span id="id1">[<a class="reference internal" href="bibliography.html#id3" title="Per-Gunnar Martinsson. Fast Direct Solvers for Elliptic PDEs. SIAM, 2019.">Martinsson, 2019</a>]</span>.</p>
 <section id="basic-properties-of-low-rank-approximations">
 <h2>Basic properties of low-rank approximations<a class="headerlink" href="#basic-properties-of-low-rank-approximations" title="Permalink to this headline">#</a></h2>
 <section id="a-reminder-of-the-singular-value-decomposition">
@@ -649,7 +662,7 @@ g_{ij} = g(x_i, y_j).
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;$\\sigma_k$&#39;)
 </pre></div>
 </div>
-<img alt="_images/low_rank_compression_7_1.png" src="_images/low_rank_compression_7_1.png" />
+<img alt="_images/low_rank_compression_8_1.png" src="_images/low_rank_compression_8_1.png" />
 </div>
 </div>
 <p>We see that a rank of around <span class="math notranslate nohighlight">\(10\)</span> is enough to approximate the original matrix <span class="math notranslate nohighlight">\(M\)</span> with an accuracy of <span class="math notranslate nohighlight">\(10^{-5}\)</span>.</p>
@@ -782,6 +795,7 @@ S_k = \sum_{\ell=1}^k \frac{1}{R_{\ell-1}[i_\ell, j_\ell]}R_{\ell-1}[:, j_\ell]R
 \]</div>
 <p>such that <span class="math notranslate nohighlight">\(A = S_k + R_k\)</span>.</p>
 <p>We are not discussing adaptive stopping criteria and the right choice of the row indices <span class="math notranslate nohighlight">\(i_k\)</span> here. ACA is highly effective for kernel matrices arising from smooth kernels. However, it can fail if the underlying kernel function is not smooth (e.g. a double-layer kernel on over the boundary of a cube).</p>
+<p>A good introduction to adaptive cross approximation and its practical use is contained in <span id="id2">[<a class="reference internal" href="bibliography.html#id4" title="Mario Bebendorf. Hierarchical Matrices. Springer, 2008.">Bebendorf, 2008</a>]</span>. Many problems from the heuristic use of the standard ACA are avoided by hybrid cross approximation which includes analytic information into the algorithm. More information can be found in <span id="id3">[<a class="reference internal" href="bibliography.html#id7" title="Steffen Börm and Lars Grasedyck. Hybrid cross approximation of integral operators. Numerische Mathematik, 101(2):221–249, 2005.">Börm and Grasedyck, 2005</a>]</span>.</p>
 </section>
 </section>
 <section id="low-rank-compression-of-integral-operators">

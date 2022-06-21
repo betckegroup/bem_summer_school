@@ -183,6 +183,18 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Addendum
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -413,6 +425,7 @@ title="Print to PDF"
 <p>The disadvantage of <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices is that compared to Fast Multipole or <span class="math notranslate nohighlight">\(\mathcal{H}^2\)</span> matrix techniques they do not have linear complexity (the <span class="math notranslate nohighlight">\(\log\)</span> factor becomes important for very large problems), and they tend to have also in practice larger memory requirements than these techniques.</p>
 <p>Nevertheless, the algorithmic implementation is very simple and parallelisation is easy. This is why they are still very popular. Moreover, in many practical applications it seems the case that also for oscillatory problems they keep good performance into the medium wavenumber regime (though their asymptotic complexity is not optimal here).</p>
 <p>In the literature <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix technqiues are also often called ACA methods. The historical reason is that <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are often implemented using adaptive cross approximation. Nevertheless, this is an inaccurate description as ACA is merely the algorithm that low-rank compresses the blocks in an <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrix. Other low-rank compression techniques can equally be applied.</p>
+<p>A good practical introduction to hierarchical matrices is the book <span id="id1">[<a class="reference internal" href="bibliography.html#id4" title="Mario Bebendorf. Hierarchical Matrices. Springer, 2008.">Bebendorf, 2008</a>]</span>. A more recent and comprehensive treatise on hierarchical matrices is given in <span id="id2">[<a class="reference internal" href="bibliography.html#id6" title="Wolfgang Hackbusch. Hierarchical Matrices: Algorithms and Analysis. Springer, 2015.">Hackbusch, 2015</a>]</span>. An excellent reference for <span class="math notranslate nohighlight">\(\mathcal{H}^2\)</span>-matrices is <span id="id3">[<a class="reference internal" href="bibliography.html#id5" title="Steffen Börm. Efficient Numerical Methods for Non-local Operators. European Mathematical Society, 2010.">Börm, 2010</a>]</span>.</p>
 <section id="from-block-cluster-trees-to-mathcal-h-matrices">
 <h2>From block-cluster trees to <span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices.<a class="headerlink" href="#from-block-cluster-trees-to-mathcal-h-matrices" title="Permalink to this headline">#</a></h2>
 <p><span class="math notranslate nohighlight">\(\mathcal{H}\)</span>-matrices are algebraic structures operating on block-cluster trees. Assume we have target and source index sets <span class="math notranslate nohighlight">\(I\)</span> and <span class="math notranslate nohighlight">\(J\)</span>, associated cluster trees <span class="math notranslate nohighlight">\(T_I\)</span> and <span class="math notranslate nohighlight">\(T_J\)</span>, and block-cluster tree <span class="math notranslate nohighlight">\(T_{I\times J}\)</span>.</p>

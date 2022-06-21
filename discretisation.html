@@ -183,6 +183,18 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
 </ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Addendum
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="bibliography.html">
+   Bibliography
+  </a>
+ </li>
+</ul>
 
     </div>
 </nav></div>
@@ -469,7 +481,7 @@ in physical space. This is intuitively clear since we parameterize on the surfac
 <p>The more difficult case occurs if triangles are either vertex adjacent, edge adjacent or identical.</p>
 <p><img alt="hmatrix" src="_images/triangles.png" /></p>
 <p>In these cases we integrate over the singularities of the kernel function. There are a number of techniques to solve this problem and we will not go into technical details here.</p>
-<p>A popular choice is the fully numerical quadrature rule by Erichsen and Sauter <a href="#id1"><span class="problematic" id="id2">:cite:`Erichsen1998EfficientAQ`</span></a>. It uses different types of quadrature point distribution depending on whether we are in the vertex, edge, or identical case.</p>
+<p>A popular choice is the fully numerical quadrature rule by <span id="id1">Erichsen and Sauter [<a class="reference internal" href="bibliography.html#id2" title="Stefan Erichsen and Stefan A. Sauter. Efficient automatic quadrature in 3-d galerkin bem. Computer Methods in Applied Mechanics and Engineering, 157:215-224, 1998.">1998</a>]</span>. It uses different types of quadrature point distribution depending on whether we are in the vertex, edge, or identical case.</p>
 <p>The advantage of this rule is that it is fully independent of the kernel, can be used on higher-order elements, arbitrary types of basis functions and the implementation can make use of modern CPU vectorization techniques. However, the number of quadrature points required is rather high. But since the number of singular integration pairs only scales linearly with the overall number of triangles this is not of much concern.</p>
 <p>An alternative are semi-analytical quadrature rules. There are different families of these rules for different types of problems. They partially integrate the integral analytically and combine with a numerical rule for a remaining kernel that is less singular. They are very efficient. However, the implementation requires the use of special functions, which can be computationally inefficient on modern vectorized CPU architectures.</p>
 </section>
