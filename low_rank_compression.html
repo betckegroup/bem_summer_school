@@ -589,9 +589,9 @@ that <span class="math notranslate nohighlight">\(r = \min\{m, n\}\)</span>.</p>
 <p>Let <span class="math notranslate nohighlight">\(A\in\mathbb{C}^{m\times n}\)</span>. If</p>
 <div class="math notranslate nohighlight">
 \[
-M\approx CZ^H 
+A\approx CZ^H 
 \]</div>
-<p>for <span class="math notranslate nohighlight">\(C, Z\in\mathbb{C}^{m\times k}\)</span> with <span class="math notranslate nohighlight">\(k\ll \min\{m, n\}\)</span></p>
+<p>for <span class="math notranslate nohighlight">\(C\in\mathbb{C}^{m\times k}\)</span>, <span class="math notranslate nohighlight">\(Z\in\mathbb{C}^{n\times k}\)</span> with <span class="math notranslate nohighlight">\(k\ll \min\{m, n\}\)</span></p>
 <p>we say that <span class="math notranslate nohighlight">\(A\)</span> has a low-rank approximation of rank <span class="math notranslate nohighlight">\(k\)</span>.</p>
 </section>
 <section id="why-are-low-rank-approximations-useful">
@@ -685,7 +685,7 @@ C_{ij} = \phi_j(x_i),\quad Z_{ij} = \overline{\psi_j(y_i)}.
 <p>Then</p>
 <div class="math notranslate nohighlight">
 \[
-G = CZ^H + R_k(x_i, y_j).
+G \approx CZ^H.
 \]</div>
 </section>
 <section id="taylor-series-are-separable-expansions">
@@ -696,7 +696,7 @@ G = CZ^H + R_k(x_i, y_j).
 g(x, y) = \sum_{\alpha \in N^d, |\alpha|\leq m} (x- x_0)^{\alpha}\frac{1}{\alpha !}\partial_x^{\alpha}g(x_0, y) + R_k(x, y).
 \]</div>
 <p>The index <span class="math notranslate nohighlight">\(k\)</span> is the number of terms in the Taylor expansion and given as <span class="math notranslate nohighlight">\(k=\left(\begin{array}{c}m+d\\ d\end{array}\right)\)</span>.</p>
-<p>The parameter <span class="math notranslate nohighlight">\(k\)</span> is the space dimension. In our case <span class="math notranslate nohighlight">\(d=3\)</span>.</p>
+<p>The parameter <span class="math notranslate nohighlight">\(d\)</span> is the space dimension. In our case <span class="math notranslate nohighlight">\(d=3\)</span>.</p>
 <p>An alternative to Taylor series is separable expansion by interpolation, or in the case of Laplace/Helmholtz type kernels spherical harmonics
 type expansions.</p>
 <p>No matter what type of expansion we choose, we need to ensure that the remainder term <span class="math notranslate nohighlight">\(R_k\)</span> decays for increasing <span class="math notranslate nohighlight">\(k\)</span>.</p>
